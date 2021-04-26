@@ -1,0 +1,9 @@
+web:
+  container_name: users-api
+  build: .
+  volumes:
+    - .:/app
+    - /app/node_modules
+  restart: always
+  ports:
+    - "8080:8080"
