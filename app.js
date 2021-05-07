@@ -74,5 +74,5 @@ app.get('/full-name/:id', (req, res) => {
 });
 
 app.listen(PORT, () =>
-    console.log(`server is up`)
+    console.log(`server is up capo`)
 );
