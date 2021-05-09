@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "lint": "standard"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -11,10 +12,8 @@
   },
   "devDependencies": {
     "babel-eslint": "^6.1.0",
+    "lint": "^0.7.0",
     "standard": "^7.1.2"
-  },
-  "scripts": {
-    "lint": "standard"
   },
   "standard": {
     "parser": "babel-eslint"
