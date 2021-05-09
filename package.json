@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "lint": "standard"
+    "lint": "eslint --fix --config .eslintrc.json \"**/*.js\""
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -13,6 +13,7 @@
   "devDependencies": {
     "babel-eslint": "^6.1.0",
     "lint": "^0.7.0",
+    "eslint": "^6.5.1",
     "standard": "^7.1.2"
   },
   "standard": {

@@ -4,9 +4,7 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package*.json ./
-RUN npm install -g eslint
-RUN npm install --save-dev @babel/core @babel/cli @babel/preset-env
-RUN npm install eslint @babel/core @babel/eslint-parser --save-dev
+RUN npm install
 
 # Bundle app source
 COPY . .
