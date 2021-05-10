@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const indexRouter = require("./routes/index");
+const indexRouter = require("./index");
 const apiRouter = require('./routes/api');
 const mongoose = require('mongoose');
 const apiResponse = require("./utils/responses");
