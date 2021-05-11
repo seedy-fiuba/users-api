@@ -1,9 +1,25 @@
-web:
-  container_name: users-api
-  build: .
-  volumes:
-    - .:/app
-    - /app/node_modules
-  restart: always
-  ports:
-    - "8080:8080"
+version: "2"
+services:
+  app:
+    container_name: users-api
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - users-network
+  mongodb:
+    container_name: users_mongodb
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - users-network
+networks:
+  users-network:
+    driver: bridge
