@@ -9,8 +9,8 @@ services:
     restart: always
     ports:
       - "8080:8080"
-    links:
-      - mongodb
+    networks:
+      - users-network
   mongodb:
     container_name: users_mongodb
     image: mongo
@@ -18,3 +18,8 @@ services:
       - ./data:/data/db
     ports:
       - "27017:27017"
+    networks:
+      - users-network
+networks:
+  users-network:
+    driver: bridge

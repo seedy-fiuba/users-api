@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+require("dotenv").config();
 const indexRouter = require("./routes/index");
 const apiRouter = require('./routes/api');
 const mongoose = require('mongoose');
@@ -10,7 +11,7 @@ const apiResponse = require("./utils/responses");
  const PORT = process.env.PORT || 8080;
 
 // DB connection
-var MONGODB_URL = "mongodb+srv://seedyadmin:RHuDBqXdcAjQ9Jsd@seedyfiuba-01.jwstn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority" //idealmente debería ser una env variable -> process.env.MONGODB_URL;
+var MONGODB_URL = process.env.MONGODB_URL;
 
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
     console.log("MongoDB: Connected to %s", MONGODB_URL);
