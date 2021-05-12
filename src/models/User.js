@@ -1,18 +1,12 @@
-const mongoose = require("mongoose");
+var mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    min: 6,
-    max: 255,
-  },
-  password: {
-    type: String,
-    required: true,
-    min: 6,
-    max: 1024,
-  }
-});
+var Schema = mongoose.Schema;
 
-module.exports = mongoose.model("User", userSchema);
+var UserSchema = new Schema({
+    name: { type: String, required: true},
+    lastName: { type: String, required: true},
+    email: { type: String, required: true},
+    password: { type: String, required: true},
+}, { timestamps: true }) // timestamps adds "createdAt" and "updatedAt" fields
+
+module.exports = mongoose.model("User", UserSchema);
