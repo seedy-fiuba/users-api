@@ -82,7 +82,7 @@ router.post('/authenticate', async (req, res) => {
   const { error } = authenticateValidation(req.body);
   if (error) return res.status(400).json({ error: error.details[0].message });
 
-  let token = req.body["auth-token"]
+  let token = req.body["authToken"]
 
   jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
     if (err) {
