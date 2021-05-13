@@ -70,12 +70,11 @@ router.post('/login', async (req, res) => {
       expiresIn: 30
     }
   );
-  res.header("auth-token", token).json({
-    error: null,
-    data: {
-      token,
-    },
-  });
+
+  responses.statusOk(res, {
+    user: user,
+    token: token
+  })
 });
 
 module.exports = router;
