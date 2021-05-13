@@ -14,8 +14,12 @@ exports.loginGoogle = [
             });
             const payload = ticket.getPayload();
             this.userid = payload['sub'];
+            console.log(ticket);
             console.log("User logged: " + this.userid);
         }
-        verify().catch(console.error).then(responses.createdOk(res, { "userId": this.userid }));
+        verify().catch((error) => {
+            console.error(error);
+            responses.unauthorizedResponse(res, error);
+        }).then(responses.createdOk(res, { "userId": this.userid }));
     }
 ]
