@@ -1,13 +1,11 @@
 const { OAuth2Client } = require('google-auth-library');
-const { body,validationResult } = require("express-validator");
 const responses = require("../utils/responses");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
-const constants = require("../utils/constants");
 
 // validation
-const { registerValidation, loginValidation } = require("../validation");
+const { registerValidation, loginValidation, authenticateValidation } = require("../validation");
 
 exports.register = [
     async (req, res) => {
@@ -38,7 +36,7 @@ exports.register = [
             const savedUser = await user.save(); //save user in database
             responses.createdOk(res, savedUser);
         } catch (error) {
-            res.status(400).json({ error });
+            responses.unexpectedError(res, error);
         }
     }
 ]
@@ -63,7 +61,7 @@ exports.login = [
         const token = jwt.sign(
             // payload data
             {
-                name: user.name,
+                email: user.email,
                 id: user._id,
             },
             process.env.TOKEN_SECRET,
@@ -71,11 +69,10 @@ exports.login = [
                 expiresIn: 30
             }
         );
-        res.header("auth-token", token).json({
-            error: null,
-            data: {
-                token,
-            },
+
+        responses.statusOk(res, {
+            user: user,
+            token: token
         });
     }
 ]
@@ -124,6 +121,25 @@ exports.loginGoogle = [
         verify().catch((error) => {
             console.error(error);
             responses.unauthorizedResponse(res, error);
+        })
+    }
+]
+
+exports.authenticate = [
+    async (req, res) => {
+        const {error} = authenticateValidation(req.body);
+        if (error) return res.status(400).json({error: error.details[0].message});
+
+        let token = req.body["authToken"]
+
+        jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+            if (err) {
+                return responses.unauthorizedResponse(res, "unauthorized")
+            }
+        });
+
+        responses.statusOk(res, {
+            message: "authorized"
         })
     }
 ]
