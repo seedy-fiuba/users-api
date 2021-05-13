@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const responses = require("../utils/responses");
+const constants = require("../utils/constants");
 
 // validation
 const { registerValidation, loginValidation } = require("../validation");
@@ -19,6 +21,10 @@ router.post("/register", async (req, res) => {
   if (isEmailExist)
     return res.status(409).json({ error: "Email already exists" });
 
+  // check
+  if (!constants.allowedRole.includes(req.body.role))
+    return res.status(400).json({);
+
   // hash the password
   const salt = await bcrypt.genSalt(10);
   let password = await bcrypt.hash(req.body.password, salt);
@@ -32,7 +38,7 @@ router.post("/register", async (req, res) => {
 
   try {
     const savedUser = await user.save(); //save user in database
-    return res.status(201).json({ error: "Registration successful" });
+    responses.createdOk(res, user);
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -62,7 +68,10 @@ router.post('/login', async (req, res) => {
       name: user.name,
       id: user._id,
     },
-    process.env.TOKEN_SECRET
+    process.env.TOKEN_SECRET,
+    {
+      expiresIn: 30
+    }
   );
   res.header("auth-token", token).json({
     error: null,
