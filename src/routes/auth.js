@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const User = require("../models/User");
+const AuthController = require("../controllers/AuthController")
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken')
 
@@ -71,5 +72,7 @@ router.post('/login', async (req, res) => {
     },
   });
 });
+
+router.post('/google_login', AuthController.loginGoogle);
 
 module.exports = router;
