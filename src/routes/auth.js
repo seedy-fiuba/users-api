@@ -23,7 +23,7 @@ router.post("/register", async (req, res) => {
 
   // check
   if (!constants.allowedRole.includes(req.body.role))
-    return res.status(400).json({);
+    return res.status(400).json({ error: error.details[0].message });
 
   // hash the password
   const salt = await bcrypt.genSalt(10);
@@ -73,7 +73,7 @@ router.post('/login', async (req, res) => {
       expiresIn: 30
     }
   );
-  res.header("auth-token", token).json({
+  res.header("authToken", token).json({
     error: null,
     data: {
       token,
