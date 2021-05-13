@@ -35,5 +35,5 @@ exports.badRequest = function (res, msg) {
         status: 400,
         message: msg,
     };
-    return res.status(401).json(data);
+    return res.status(400).json(data);
 };
