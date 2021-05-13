@@ -84,7 +84,6 @@ exports.loginGoogle = [
     (req, res) => {
         const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
         const client = new OAuth2Client(CLIENT_ID);
-        const payload = undefined;
 
         async function verify() {
             const ticket = await client.verifyIdToken({
@@ -92,7 +91,6 @@ exports.loginGoogle = [
                 audience: CLIENT_ID,
             });
             const payload = ticket.getPayload();
-            this.userid = payload['sub'];
 
             var userData = await User.findOne({ email: payload['email'] });
             if (!userData) {
@@ -110,10 +108,7 @@ exports.loginGoogle = [
                 });
             }
 
-            console.log(userData);
-
             const token = jwt.sign(
-                // payload data
                 {
                     name: userData.name,
                     id: userData._id,
