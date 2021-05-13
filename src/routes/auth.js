@@ -86,15 +86,11 @@ router.post('/authenticate', async (req, res) => {
 
   jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      return responses.unauthorizedResponse(res, {
-        status: 409,
-        message: "unauthorized"
-      })
+      return responses.unauthorizedResponse(res, "unauthorized")
     }
   });
 
   responses.statusOk(res, {
-    status: 200,
     message: "authorized"
   })
 })
