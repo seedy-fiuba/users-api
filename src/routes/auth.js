@@ -6,7 +6,7 @@ const responses = require("../utils/responses");
 const constants = require("../utils/constants");
 
 // validation
-const { registerValidation, loginValidation } = require("../validation");
+const { registerValidation, loginValidation, authenticateValidation } = require("../validation");
 
 // register route
 router.post("/register", async (req, res) => {
@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
   const token = jwt.sign(
     // payload data
     {
-      name: user.name,
+      email: user.email,
       id: user._id,
     },
     process.env.TOKEN_SECRET,
@@ -76,5 +76,27 @@ router.post('/login', async (req, res) => {
     token: token
   })
 });
+
+
+router.post('/authenticate', async (req, res) => {
+  const { error } = authenticateValidation(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message });
+
+  let token = req.body["auth-token"]
+
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return responses.unauthorizedResponse(res, {
+        status: 409,
+        message: "unauthorized"
+      })
+    }
+  });
+
+  responses.statusOk(res, {
+    status: 200,
+    message: "authorized"
+  })
+})
 
 module.exports = router;
