@@ -25,3 +25,15 @@ exports.unexpectedError = function (res, msg) {
 exports.createdOk = function (res, data) {
     return res.status(201).json(data);
 };
+
+exports.statusOk = function (res, data) {
+    return res.status(200).json(data);
+};
+
+exports.badRequest = function (res, msg) {
+    var data = {
+        status: 400,
+        message: msg,
+    };
+    return res.status(400).json(data);
+};
