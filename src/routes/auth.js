@@ -21,10 +21,6 @@ router.post("/register", async (req, res) => {
   if (isEmailExist)
     return res.status(409).json({ error: "Email already exists" });
 
-  // check
-  if (!constants.allowedRole.includes(req.body.role))
-    return res.status(400).json({);
-
   // hash the password
   const salt = await bcrypt.genSalt(10);
   let password = await bcrypt.hash(req.body.password, salt);
@@ -34,11 +30,12 @@ router.post("/register", async (req, res) => {
     lastName: req.body.lastName,
     email: req.body.email,
     password: password,
+    role: req.body.role
   });
 
   try {
     const savedUser = await user.save(); //save user in database
-    responses.createdOk(res, user);
+    responses.createdOk(res, savedUser);
   } catch (error) {
     res.status(400).json({ error });
   }
