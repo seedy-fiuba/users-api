@@ -17,7 +17,7 @@ router.post("/register", async (req, res) => {
   // search for a matching email and throw error when email already registered
   const isEmailExist = await User.findOne({ email: req.body.email });
   if (isEmailExist)
-    return res.status(400).json({ error: "Email already exists" });
+    return res.status(409).json({ error: "Email already exists" });
 
   // hash the password
   const salt = await bcrypt.genSalt(10);
@@ -31,8 +31,8 @@ router.post("/register", async (req, res) => {
   });
 
   try {
-    const savedUser = await user.save();
-    res.json({ error: null, data: { userId: savedUser._id } });
+    const savedUser = await user.save(); //save user in database
+    return res.status(201).json({ error: "Registration successful" });
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
   // check for password correctness
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword)
-    return res.status(400).json({ error: "Password is wrong" });
+    return res.status(401).json({ error: "Password is wrong" });
 
   // create token
   const token = jwt.sign(

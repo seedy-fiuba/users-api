@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: false }))
 //Router prefix
 app.use("/", indexRouter);
 app.use("/api/", apiRouter);
-app.use("/api/user", authRoutes);
+app.use("/user", authRoutes);
 
 app.listen(PORT, () =>
   console.log(`server is up`)
