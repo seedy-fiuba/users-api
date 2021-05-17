@@ -1,4 +1,4 @@
-var mongoose = require("mongoose");
+var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
@@ -8,6 +8,6 @@ const UserSchema = new Schema({
     email: { type: String, required: true},
     password: { type: String, required: true},
     role: { type: String, required: true}
-}, { timestamps: true }) // timestamps adds "createdAt" and "updatedAt" fields
+}, { timestamps: true }); // timestamps adds "createdAt" and "updatedAt" fields
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model('User', UserSchema);
