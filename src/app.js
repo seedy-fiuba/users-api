@@ -1,11 +1,11 @@
 'use strict';
 
 const express = require('express');
-require("dotenv").config();
-const indexRouter = require("./routes/index");
+require('dotenv').config();
+const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
 const mongoose = require('mongoose');
-const apiResponse = require("./utils/responses");
+const apiResponse = require('./utils/responses');
 
 // Constants
 const PORT = process.env.PORT || 8080;
@@ -14,41 +14,38 @@ const PORT = process.env.PORT || 8080;
 var MONGODB_URL = process.env.MONGODB_URL;
 
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-    console.log("MongoDB: Connected to %s", MONGODB_URL);
+	console.log('MongoDB: Connected to %s', MONGODB_URL);
 }).catch(err => {
-    console.error("MongoDB connect error:", err.message);
-    process.exit(1);
-})
+	console.error('MongoDB connect error:', err.message);
+	process.exit(1);
+});
 
-var db = mongoose.connection;
+// var db = mongoose.connection;
 
 // App
 const app = express();
 
-//import routes
-const authRoutes = require("./routes/auth");
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 //Router prefix
-app.use("/", indexRouter);
-app.use("/api/", apiRouter);
-app.use("/user", authRoutes);
+app.use('/', indexRouter);
+app.use('/api/', apiRouter);
 
 app.listen(PORT, () =>
-  console.log(`server is up`)
+	console.log('server is up')
 );
 
 // throw 404 if URL not found
-app.all("*", function(req, res) {
-    return apiResponse.notFoundResponse(res, "Page not found");
+app.all('*', function(req, res) {
+	return apiResponse.notFoundResponse(res, 'Page not found');
 });
 
 app.use((err, req, res) => {
-    if (err.name == "UnauthorizedError") {
-        return apiResponse.unauthorizedResponse(res, err.message);
-    }
-})
+	if (err.name == 'UnauthorizedError') {
+		return apiResponse.unauthorizedResponse(res, err.message);
+	}
+});
 
 module.exports = app;
