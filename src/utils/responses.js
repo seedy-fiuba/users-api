@@ -23,7 +23,6 @@ exports.unexpectedError = function (res, msg) {
 };
 
 exports.createdOk = function (res, data) {
-<<<<<<< HEAD
     return res.status(201).json(data);
 };
 
@@ -38,7 +37,3 @@ exports.badRequest = function (res, msg) {
     };
     return res.status(400).json(data);
 };
-=======
-	return res.status(201).json(data);
-};
->>>>>>> f4da66ee6db57f1ab286cad87c631261acaccbec
