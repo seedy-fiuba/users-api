@@ -132,7 +132,7 @@ exports.authenticate = [
 
         let token = req.body["authToken"]
 
-        jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+        jwt.verify(token, process.env.TOKEN_SECRET, (err) => {
             if (err) {
                 return responses.unauthorizedResponse(res, "unauthorized")
             }
