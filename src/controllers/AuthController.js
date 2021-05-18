@@ -1,42 +1,28 @@
 const { OAuth2Client } = require('google-auth-library');
 const responses = require("../utils/responses");
 const User = require("../models/User");
-const bcrypt = require("bcryptjs");
+const UserService = require('../services/UserService');
+const UserError = require('../exceptions/UserError');
+const constants = require('../utils/constants');
 const jwt = require('jsonwebtoken');
 
 // validation
 const { registerValidation, loginValidation, authenticateValidation } = require("../validation");
 
 exports.register = [
-    async (req, res) => {
+    async (req, res, next) => {
         // validate the user
-        const { error } = registerValidation(req.body);
-
-        // throw validation errors
-        if (error) return res.status(400).json({ error: error.details[0].message });
-
-        // search for a matching email and throw error when email already registered
-        const isEmailExist = await User.findOne({ email: req.body.email });
-        if (isEmailExist)
-            return res.status(409).json({ error: "Email already exists" });
-
-        // hash the password
-        const salt = await bcrypt.genSalt(10);
-        let password = await bcrypt.hash(req.body.password, salt);
-
-        const user = new User({
-            name: req.body.name,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: password,
-            role: req.body.role
-        });
-
         try {
-            const savedUser = await user.save(); //save user in database
-            responses.createdOk(res, savedUser);
-        } catch (error) {
-            responses.unexpectedError(res, error);
+            const { error } = registerValidation(req.body);
+
+            // throw validation errors
+            if (error)
+                throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
+
+            const userData = await UserService.createUser(req.body);
+            return responses.statusOk(res, userData);
+        } catch (e) {
+            next(e);
         }
     }
 ]

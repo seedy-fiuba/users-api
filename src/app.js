@@ -7,6 +7,8 @@ const apiRouter = require('./routes/api');
 const authRoutes = require("./routes/auth");
 const mongoose = require('mongoose');
 const apiResponse = require('./utils/responses');
+const constants = require('./utils/constants');
+const methodOverride = require('method-override');
 
 // Constants
 const PORT = process.env.PORT || 8080;
@@ -20,8 +22,6 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 	console.error('MongoDB connect error:', err.message);
 	process.exit(1);
 });
-
-mongoose.connection;
 
 // App
 const app = express();
@@ -38,14 +38,29 @@ app.listen(PORT, () =>
 	console.log('server is up')
 );
 
+
 // throw 404 if URL not found
-app.all('*', function(req, res) {
-	return apiResponse.notFoundResponse(res, 'Page not found');
+app.all('*', function(req, res, next) {
+	const error = new Error('Page not found');
+	error.statusCode = 404;
+	next(error);
 });
 
-app.use((err, req, res) => {
-	if (err.name == 'UnauthorizedError') {
-		return apiResponse.unauthorizedResponse(res, err.message);
+app.use((err, req, res, next) => {
+	if (err) {
+		if (err.name === constants.error.UNAUTHORIZED_ERROR) {
+			return apiResponse.unauthorizedResponse(res, err.message);
+		}
+		if (err.name === constants.error.BAD_REQUEST) {
+			return apiResponse.badRequest(res, err.message);
+		}
+		if (err.name === constants.error.CONFLICT_ERROR) {
+			return apiResponse.conflictError(res, err.message);
+		}
+		if (err.name === constants.error.NOT_FOUND) {
+			return apiResponse.notFoundResponse(res, err.message);
+		}
+		return apiResponse.unexpectedError(res, err.message);
 	}
 });
 

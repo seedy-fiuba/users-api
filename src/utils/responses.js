@@ -37,3 +37,11 @@ exports.badRequest = function (res, msg) {
     };
     return res.status(400).json(data);
 };
+
+exports.conflictError = function (res, msg) {
+	var data = {
+		status: 409,
+		message: msg
+	}
+	return res.status(409).json(data);
+}
