@@ -23,7 +23,7 @@ exports.unexpectedError = function (res, msg) {
 };
 
 exports.createdOk = function (res, data) {
-    return res.status(201).json(data);
+	return res.status(201).json(data);
 };
 
 exports.statusOk = function (res, data) {

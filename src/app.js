@@ -4,6 +4,7 @@ const express = require('express');
 require('dotenv').config();
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
+const authRoutes = require("./routes/auth");
 const mongoose = require('mongoose');
 const apiResponse = require('./utils/responses');
 
@@ -20,11 +21,10 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 	process.exit(1);
 });
 
-// var db = mongoose.connection;
+mongoose.connection;
 
 // App
 const app = express();
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -32,6 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 //Router prefix
 app.use('/', indexRouter);
 app.use('/api/', apiRouter);
+app.use('/user', authRoutes);
 
 app.listen(PORT, () =>
 	console.log('server is up')
