@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const constants = require('../utils/constants');
 const UserError = require('../exceptions/UserError');
 
-exports.createUser = async (data) => {
+createUser = async (data) => {
     const userData = await getUserByMail(data.email);
     if (userData)
         throw new UserError(constants.error.CONFLICT_ERROR, 'User already registered');
@@ -36,5 +36,10 @@ exports.createUser = async (data) => {
 
 getUserByMail = async (email) => {
     return User.findOne({ email: email });
+}
+
+module.exports = {
+    createUser,
+    getUserByMail
 }
 

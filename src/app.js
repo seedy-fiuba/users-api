@@ -48,6 +48,8 @@ app.all('*', function(req, res, next) {
 
 app.use((err, req, res, next) => {
 	if (err) {
+		console.error(err.stack);
+
 		if (err.name === constants.error.UNAUTHORIZED_ERROR) {
 			return apiResponse.unauthorizedResponse(res, err.message);
 		}
