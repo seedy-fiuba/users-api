@@ -4,7 +4,7 @@ const express = require('express');
 require('dotenv').config();
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
-const authRoutes = require("./routes/auth");
+const authRoutes = require('./routes/auth');
 const mongoose = require('mongoose');
 const apiResponse = require('./utils/responses');
 const constants = require('./utils/constants');
@@ -45,7 +45,7 @@ app.all('*', function(req, res, next) {
 	next(error);
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
 	if (err) {
 		console.error(err.stack);
 
