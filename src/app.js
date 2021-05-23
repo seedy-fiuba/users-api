@@ -8,7 +8,6 @@ const authRoutes = require("./routes/auth");
 const mongoose = require('mongoose');
 const apiResponse = require('./utils/responses');
 const constants = require('./utils/constants');
-const methodOverride = require('method-override');
 
 // Constants
 const PORT = process.env.PORT || 8080;
