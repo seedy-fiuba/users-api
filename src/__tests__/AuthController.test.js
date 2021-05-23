@@ -1,5 +1,6 @@
 const supertest = require('supertest')
-
+const server = require('../server')
+let request = supertest(server.app)
 
 describe('POST /user', () => {
 	beforeEach(() => {
@@ -11,6 +12,18 @@ describe('POST /user', () => {
 	})
 
 	test('create user', async () => {
+		let body = {
+			name: "jose",
+			lastName: "sbruzzi",
+			email: "tumama@gmail.com",
+			password:"contraReLoca",
+			role: "admin"
+		}
+
+		const res = await request.post("/user/register").send(body)
+
+		console.log(res.status)
+		console.log(res.text)
 		expect(true).toBe(true);
 	});
 });
