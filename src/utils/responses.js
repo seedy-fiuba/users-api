@@ -27,13 +27,21 @@ exports.createdOk = function (res, data) {
 };
 
 exports.statusOk = function (res, data) {
-    return res.status(200).json(data);
+	return res.status(200).json(data);
 };
 
 exports.badRequest = function (res, msg) {
-    var data = {
-        status: 400,
-        message: msg,
-    };
-    return res.status(400).json(data);
+	var data = {
+		status: 400,
+		message: msg,
+	};
+	return res.status(400).json(data);
+};
+
+exports.conflictError = function (res, msg) {
+	var data = {
+		status: 409,
+		message: msg
+	};
+	return res.status(409).json(data);
 };
