@@ -1,7 +1,6 @@
 const { OAuth2Client } = require('google-auth-library');
 const responses = require('../utils/responses');
-const User = require('../models/User');
-const UserService = require('../services/UserService');
+let UserService = require('../services/UserService');
 const UserError = require('../exceptions/UserError');
 const constants = require('../utils/constants');
 const jwt = require('jsonwebtoken');
@@ -9,6 +8,10 @@ const bcrypt = require('bcryptjs');
 
 // validation
 const { registerValidation, loginValidation, authenticateValidation } = require('../validation');
+
+exports.setUserService = (service) => {
+	UserService = service;
+}
 
 exports.register = [
 	async (req, res, next) => {

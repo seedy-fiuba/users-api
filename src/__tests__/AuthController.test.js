@@ -1,6 +1,19 @@
 const supertest = require('supertest')
 const server = require('../server')
 let request = supertest(server.app)
+const MockModel = require("jest-mongoose-mock");
+let authController = require('../controllers/AuthController');
+
+let userServiceMock = {
+	createUser: jest.fn(),
+	getUserByEmail: jest.fn(),
+}
+
+authController.setUserService(userServiceMock);
+
+beforeAll(() => {
+	jest.mock("../models/User", () => new MockModel() );
+});
 
 describe('POST /user', () => {
 	beforeEach(() => {
