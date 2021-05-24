@@ -1,7 +1,19 @@
-codecov:
-  require_ci_to_pass: yes
-
 coverage:
-  precision: 2
-  round: down
-  range: "80...100"
+  status:
+    project:
+      default:
+        # basic
+        target: auto
+        threshold: 80%
+        base: auto
+        flags:
+          - unit
+        paths:
+          - "src"
+        # advanced settings
+        branches:
+          - master
+          - develop
+        if_ci_failed: error #success, failure, error, ignore
+        informational: false
+        only_pulls: true
