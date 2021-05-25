@@ -57,6 +57,7 @@ app.use((err, req, res, next) => {
 		}
 		return apiResponse.unexpectedError(res, err.message);
 	}
+	next(err);
 });
 
 module.exports = {

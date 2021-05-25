@@ -33,8 +33,8 @@ describe('POST /user', () => {
 		const res = await request.post('/user/register').send(mockedUser);
 
 		expect(res.status).toBe(200);
-		let parsedUser = JSON.parse(res.text);
 
+		let parsedUser = JSON.parse(res.text);
 		expect(parsedUser.id.length).toBeGreaterThan(0);
 		expect(parsedUser.name).toBe(mockedUser.name);
 		expect(parsedUser.lastName).toBe(mockedUser.lastName);

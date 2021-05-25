@@ -127,13 +127,13 @@ async function googleVerify(req, res, clientId, client) {
 
 	var userData = await UserService.getUserByMail(payload['email']);
 	if (!userData) {
-		const userPayload = new User({
+		const userPayload = {
 			name: payload['given_name'],
 			lastName: payload['family_name'],
 			email: payload['email'],
 			password: '-',
 			role: '-' //TODO: Set role
-		});
+		};
 
 		userData = await UserService.createUser(userPayload);
 	}
