@@ -6,7 +6,7 @@ const server = require('./server');
 const PORT = process.env.PORT || 8080;
 
 // ToDo encapsular con try catch
-server.connectDB()
+server.connectDB();
 
 server.app.listen(PORT, () =>
 	console.log('server is up')

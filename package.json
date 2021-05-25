@@ -34,7 +34,7 @@
   "devDependencies": {
     "@hapi/joi": "^17.1.1",
     "eslint": "^7.26.0",
-    "jest-mongoose-mock": "^1.2.0"
+    "mockingoose": "^2.15.2"
   },
   "jest": {
     "testEnvironment": "node",

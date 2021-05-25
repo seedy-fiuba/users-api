@@ -1,57 +1,45 @@
-const supertest = require('supertest')
-const server = require('../server')
-let request = supertest(server.app)
-const MockModel = require("jest-mongoose-mock");
-let authController = require('../controllers/AuthController');
+const supertest = require('supertest');
+const server = require('../server');
+let request = supertest(server.app);
+const mockingoose = require('mockingoose');
+let userModel = require('../models/User');
 
-let userServiceMock = {
-	createUser: jest.fn(),
-	getUserByEmail: jest.fn(),
-}
-
-authController.setUserService(userServiceMock);
+let mockedUser;
 
 beforeAll(() => {
-	jest.mock("../models/User", () => new MockModel() );
+	mockedUser = {
+		name: 'jose',
+		lastName: 'sbruzzi',
+		email: 'tumama@gmail.com',
+		password:'contraReLoca',
+		role: 'sponsor'
+	};
 });
 
 describe('POST /user', () => {
+	mockingoose(userModel);
+
 	beforeEach(() => {
-		// algo
-	})
+		mockingoose(userModel).reset();
+	});
 
 	afterAll(() => {
-		// algo
-	})
+		jest.clearAllMocks();
+	});
 
 	test('create user', async () => {
-		let body = {
-			name: "jose",
-			lastName: "sbruzzi",
-			email: "tumama@gmail.com",
-			password:"contraReLoca",
-			role: "admin"
-		}
+		mockingoose(userModel).toReturn(mockedUser, 'save');
 
-		const res = await request.post("/user/register").send(body)
+		const res = await request.post('/user/register').send(mockedUser);
 
-		console.log(res.status)
-		console.log(res.text)
-		expect(true).toBe(true);
+		expect(res.status).toBe(200);
+		let parsedUser = JSON.parse(res.text);
+
+		expect(parsedUser.id.length).toBeGreaterThan(0);
+		expect(parsedUser.name).toBe(mockedUser.name);
+		expect(parsedUser.lastName).toBe(mockedUser.lastName);
+		expect(parsedUser.email).toBe(mockedUser.email);
+		expect(parsedUser.role).toBe(mockedUser.role);
+		expect(parsedUser.password).toBeUndefined();
 	});
 });
-
-// describe('POST /api/project', () => {//
-// 	test("should create a new project", async () => {
-// 		let body = {name: "proyecto1", description: "proyecto  re copado"}
-//
-// 		const res = await request.post("/api/project").send(body)
-//
-//
-// 		expect(projectMockRepository.createProject.mock.calls.length).toBe(1)
-// 		expect(projectMockRepository.createProject.mock.calls[0][0]).toBe(body.name)
-// 		expect(projectMockRepository.createProject.mock.calls[0][1]).toBe(body.description)
-// 		expect(res.status).toBe(200)
-// 		expect(res.body.message).toBe('project added successfully')
-// 	})
-// })

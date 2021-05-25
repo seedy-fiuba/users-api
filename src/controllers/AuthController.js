@@ -11,7 +11,7 @@ const { registerValidation, loginValidation, authenticateValidation } = require(
 
 exports.setUserService = (service) => {
 	UserService = service;
-}
+};
 
 exports.register = [
 	async (req, res, next) => {
