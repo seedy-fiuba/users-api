@@ -1,9 +1,12 @@
+jest.mock('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 const supertest = require('supertest');
 const server = require('../server');
 let request = supertest(server.app);
 const mockingoose = require('mockingoose');
 let userModel = require('../models/User');
 const hash = require('../utils/hashUtil');
+const UserService = require('../services/UserService');
 
 let mockedUser;
 
@@ -25,7 +28,7 @@ describe('POST /user/register', () => {
 		mockingoose(userModel).toReturn(mockedUser, 'save');
 	});
 
-	afterAll(() => {
+	afterEach(() => {
 		jest.clearAllMocks();
 	});
 
@@ -98,7 +101,7 @@ describe('POST /user/login', () => {
 		mockingoose(userModel).toReturn(mockedUser, 'findOne');
 	});
 
-	afterAll(() => {
+	afterEach(() => {
 		jest.clearAllMocks();
 	});
 
@@ -117,5 +120,75 @@ describe('POST /user/login', () => {
 		userLogin.email = 'invalid email';
 		const res = await request.post('/user/login').send(userLogin);
 		expect(res.status).toBe(400);
+	});
+})
+
+describe('POST /user/google_login', () => {
+
+	let verifyIdToken;
+
+	beforeEach(() => {
+		verifyIdToken = jest.fn()
+		OAuth2Client.mockImplementation(() => {
+			return {
+				verifyIdToken: verifyIdToken
+			}
+		})
+		verifyIdToken.mockReturnValue({ getPayload: () => {
+				return {
+					email: mockedUser.email,
+					given_name: mockedUser.name,
+					family_name: mockedUser.lastName,
+				}
+			}
+		});
+		mockingoose(userModel).toReturn(mockedUser, 'findOne');
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
+	test("should verify token successfully...", async () => {
+		let body = {
+			idToken: 'token'
+		}
+		const res = await request.post('/user/google_login').send(body);
+
+		expect(verifyIdToken).toHaveBeenCalledWith({ idToken: 'token', audience: process.env.GOOGLE_CLIENT_ID });
+		expect(res.status).toBe(200);
+		let parsedBody = JSON.parse(res.text);
+
+		expect(parsedBody.token).toBeDefined();
+		expect(parsedBody.user).toBeDefined();
+	});
+
+	test('should register user if does not exist', async() => {
+		mockingoose(userModel).toReturn(undefined, 'findOne');
+		let createUserSpy = jest.spyOn(UserService, 'createUser');
+		let getUserByMailSpy = jest.spyOn(UserService, 'getUserByMail');
+
+		let body = {
+			idToken: 'token'
+		}
+		const res = await request.post('/user/google_login').send(body);
+		expect(res.status).toBe(200);
+
+		expect(getUserByMailSpy).toHaveBeenCalledTimes(1);
+		expect(createUserSpy).toHaveBeenCalledTimes(1);
+	});
+
+	test('should login user if already registered', async() => {
+		let createUserSpy = jest.spyOn(UserService, 'createUser');
+		let getUserByMailSpy = jest.spyOn(UserService, 'getUserByMail');
+
+		let body = {
+			idToken: 'token'
+		}
+		const res = await request.post('/user/google_login').send(body);
+		expect(res.status).toBe(200);
+
+		expect(getUserByMailSpy).toHaveBeenCalledTimes(1);
+		expect(createUserSpy).toHaveBeenCalledTimes(0);
 	});
 })
