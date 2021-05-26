@@ -11,7 +11,7 @@ const UserSchema = new Schema({
 	role: { type: String, required: true}
 }, { timestamps: true }); // timestamps adds "createdAt" and "updatedAt" fields
 
-if (process.env.SCOPE === 'PROD') {
+if (process.env.NODE_ENV !== 'test') {
 	autoIncrement.initialize(mongoose.connection);
 	UserSchema.plugin(autoIncrement.plugin, 'User');
 }
