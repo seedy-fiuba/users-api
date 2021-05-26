@@ -4,7 +4,7 @@ let UserService = require('../services/UserService');
 const UserError = require('../exceptions/UserError');
 const constants = require('../utils/constants');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const hash = require('../utils/hashUtil');
 
 // validation
 const { registerValidation, loginValidation, authenticateValidation } = require('../validation');
@@ -48,7 +48,7 @@ exports.login = [
 				throw new UserError(constants.error.BAD_REQUEST, 'No user registered with this email.');
 
 			// check for password correctness
-			const validPassword = await bcrypt.compare(req.body.password, user.password);
+			const validPassword = await hash.validatePasswords(req.body.password, user.password);
 			if (!validPassword) {
 				throw new UserError(constants.error.UNAUTHORIZED_ERROR, 'Password is wrong');
 			}
