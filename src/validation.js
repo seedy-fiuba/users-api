@@ -21,7 +21,7 @@ const loginValidation = (data) => {
 
 const authenticateValidation = (data) => {
 	const schema = Joi.object({
-		'auth-token': Joi.string().min(6).max(1024).required(),
+		'authToken': Joi.string().min(6).max(1024).required(),
 	});
 	return schema.validate(data);
 };

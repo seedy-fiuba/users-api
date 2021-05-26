@@ -58,7 +58,7 @@ exports.login = [
 				},
 				process.env.TOKEN_SECRET,
 				{
-					expiresIn: 30
+					expiresIn: 60 * 60 * 1
 				}
 			);
 
@@ -99,14 +99,16 @@ exports.authenticate = [
 
 			let token = req.body['authToken'];
 
-			jwt.verify(token, process.env.TOKEN_SECRET, (err) => {
+			jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
 				if (err) {
+					console.log("entra a error")
 					return responses.unauthorizedResponse(res, 'unauthorized');
 				}
-			});
 
-			responses.statusOk(res, {
-				message: 'authorized'
+				return responses.statusOk(res, {
+					message: 'authorized',
+					identity: decoded
+				});
 			});
 		} catch (e) {
 			next(e);
