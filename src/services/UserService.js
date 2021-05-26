@@ -26,7 +26,6 @@ const createUser = async (data) => {
 			name: savedUser.name,
 			lastName: savedUser.lastName,
 			email: savedUser.email,
-			password: savedUser.password,
 			role: savedUser.role
 		};
 	} catch (error) {
