@@ -101,7 +101,6 @@ exports.authenticate = [
 
 			jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
 				if (err) {
-					console.log("entra a error")
 					return responses.unauthorizedResponse(res, 'unauthorized');
 				}
 

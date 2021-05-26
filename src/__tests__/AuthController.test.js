@@ -1,5 +1,7 @@
 jest.mock('google-auth-library');
 const { OAuth2Client } = require('google-auth-library');
+const jwt = require('jsonwebtoken');
+jest.mock('jsonwebtoken');
 const supertest = require('supertest');
 const server = require('../server');
 let request = supertest(server.app);
@@ -9,6 +11,12 @@ const hash = require('../utils/hashUtil');
 const UserService = require('../services/UserService');
 
 let mockedUser;
+let jwtSignVerify;
+
+beforeAll(() => {
+	jwtSignVerify = jest.spyOn(jwt, 'sign');
+	jwtSignVerify.mockImplementation(() => { return { token: 'token' }});
+})
 
 beforeEach(() => {
 	mockedUser = {
@@ -108,7 +116,17 @@ describe('POST /user/login', () => {
 	test('Login successful with matching email and password', async () => {
 		const res = await request.post('/user/login').send(userLogin);
 		expect(res.status).toBe(200);
+		expect(jwtSignVerify).toHaveBeenCalledTimes(1);
+
+		let parsedBody = JSON.parse(res.text);
+		expect(parsedBody.user).toBeDefined();
+		expect(parsedBody.token).toBeDefined();
 	});
+
+	test('Login fails with invalida body', async () => {
+		const res = await request.post('/user/login').send({});
+		expect(res.status).toBe(400);
+	})
 
 	test('Unauthorized if password incorrect', async () => {
 		userLogin.password = 'another password';
@@ -121,7 +139,7 @@ describe('POST /user/login', () => {
 		const res = await request.post('/user/login').send(userLogin);
 		expect(res.status).toBe(400);
 	});
-})
+});
 
 describe('POST /user/google_login', () => {
 
@@ -162,8 +180,10 @@ describe('POST /user/google_login', () => {
 
 		expect(verifyIdTokenMock).toHaveBeenCalledWith({ idToken: 'token', audience: process.env.GOOGLE_CLIENT_ID });
 		expect(res.status).toBe(200);
-		let parsedBody = JSON.parse(res.text);
 
+		expect(jwtSignVerify).toHaveBeenCalledTimes(1);
+
+		let parsedBody = JSON.parse(res.text);
 		expect(parsedBody.token).toBeDefined();
 		expect(parsedBody.user).toBeDefined();
 	});
@@ -185,4 +205,39 @@ describe('POST /user/google_login', () => {
 		expect(getUserByMailSpy).toHaveBeenCalledTimes(1);
 		expect(createUserSpy).toHaveBeenCalledTimes(0);
 	});
-})
+});
+
+describe('POST /user/authenticate', () => {
+
+	let tokenBody;
+	let verifySpy;
+
+	beforeAll(() => {
+		tokenBody = {
+			authToken: 'sdflnewlkntlekngskndflksnlerte'
+		}
+		verifySpy = jest.spyOn(jwt, 'verify');
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
+	test('user is unauthorized if token is invalid', async () => {
+		verifySpy.mockImplementation((token, secret, callback) => callback(new Error(), undefined));
+
+		const res = await request.post('/user/authenticate').send(tokenBody);
+		expect(res.status).toBe(401);
+	});
+
+	test('user is authorized if token is valid', async () => {
+		verifySpy.mockImplementation((token, secret, callback) => callback(undefined, "kk"));
+
+		const res = await request.post('/user/authenticate').send(tokenBody);
+		expect(res.status).toBe(200);
+
+		let parsedBody = JSON.parse(res.text);
+		expect(parsedBody.message).toBe('authorized');
+		expect(parsedBody.identity).toBeDefined();
+	});
+});
