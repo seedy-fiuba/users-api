@@ -125,16 +125,24 @@ describe('POST /user/login', () => {
 
 describe('POST /user/google_login', () => {
 
-	let verifyIdToken;
+	let verifyIdTokenMock;
+	let createUserSpy;
+	let getUserByMailSpy;
+	let idTokenBody;
 
 	beforeEach(() => {
-		verifyIdToken = jest.fn()
+		idTokenBody = {
+			idToken: 'token'
+		}
+		createUserSpy = jest.spyOn(UserService, 'createUser');
+		getUserByMailSpy = jest.spyOn(UserService, 'getUserByMail');
+		verifyIdTokenMock = jest.fn()
 		OAuth2Client.mockImplementation(() => {
 			return {
-				verifyIdToken: verifyIdToken
+				verifyIdToken: verifyIdTokenMock
 			}
 		})
-		verifyIdToken.mockReturnValue({ getPayload: () => {
+		verifyIdTokenMock.mockReturnValue({ getPayload: () => {
 				return {
 					email: mockedUser.email,
 					given_name: mockedUser.name,
@@ -150,12 +158,9 @@ describe('POST /user/google_login', () => {
 	});
 
 	test("should verify token successfully...", async () => {
-		let body = {
-			idToken: 'token'
-		}
-		const res = await request.post('/user/google_login').send(body);
+		const res = await request.post('/user/google_login').send(idTokenBody);
 
-		expect(verifyIdToken).toHaveBeenCalledWith({ idToken: 'token', audience: process.env.GOOGLE_CLIENT_ID });
+		expect(verifyIdTokenMock).toHaveBeenCalledWith({ idToken: 'token', audience: process.env.GOOGLE_CLIENT_ID });
 		expect(res.status).toBe(200);
 		let parsedBody = JSON.parse(res.text);
 
@@ -165,13 +170,8 @@ describe('POST /user/google_login', () => {
 
 	test('should register user if does not exist', async() => {
 		mockingoose(userModel).toReturn(undefined, 'findOne');
-		let createUserSpy = jest.spyOn(UserService, 'createUser');
-		let getUserByMailSpy = jest.spyOn(UserService, 'getUserByMail');
 
-		let body = {
-			idToken: 'token'
-		}
-		const res = await request.post('/user/google_login').send(body);
+		const res = await request.post('/user/google_login').send(idTokenBody);
 		expect(res.status).toBe(200);
 
 		expect(getUserByMailSpy).toHaveBeenCalledTimes(1);
@@ -179,13 +179,7 @@ describe('POST /user/google_login', () => {
 	});
 
 	test('should login user if already registered', async() => {
-		let createUserSpy = jest.spyOn(UserService, 'createUser');
-		let getUserByMailSpy = jest.spyOn(UserService, 'getUserByMail');
-
-		let body = {
-			idToken: 'token'
-		}
-		const res = await request.post('/user/google_login').send(body);
+		const res = await request.post('/user/google_login').send(idTokenBody);
 		expect(res.status).toBe(200);
 
 		expect(getUserByMailSpy).toHaveBeenCalledTimes(1);
