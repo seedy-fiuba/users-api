@@ -117,7 +117,7 @@ describe('POST /user/login', () => {
 	});
 
 	test('Fails if user is not registered', async() => {
-		userLogin.email = 'invalid email';
+		mockingoose(userModel).toReturn(undefined, 'findOne');
 		const res = await request.post('/user/login').send(userLogin);
 		expect(res.status).toBe(400);
 	});

@@ -9,10 +9,6 @@ const hash = require('../utils/hashUtil');
 // validation
 const { registerValidation, loginValidation, authenticateValidation } = require('../validation');
 
-exports.setUserService = (service) => {
-	UserService = service;
-};
-
 exports.register = [
 	async (req, res, next) => {
 		// validate the user
