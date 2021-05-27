@@ -1,15 +1,14 @@
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
 const constants = require('../utils/constants');
 const UserError = require('../exceptions/UserError');
+const hash = require('../utils/hashUtil');
 
 const createUser = async (data) => {
 	const userData = await getUserByMail(data.email);
 	if (userData)
 		throw new UserError(constants.error.CONFLICT_ERROR, 'User already registered');
 
-	const salt = await bcrypt.genSalt(10);
-	let password = await bcrypt.hash(data.password, salt);
+	let password = await hash.encrypt(data.password);
 
 	const user = new User({
 		name: data.name,
