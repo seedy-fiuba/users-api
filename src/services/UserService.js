@@ -37,8 +37,15 @@ const getUserByMail = async (email) => {
 	return User.findOne({ email: email });
 };
 
+const updateUserByMail = async (email, update) => {
+	return User.findOneAndUpdate(email, update, {
+		new: true
+	});
+};
+
 module.exports = {
 	createUser,
-	getUserByMail
+	getUserByMail,
+	updateUserByMail
 };
 

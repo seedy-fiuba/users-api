@@ -6,6 +6,6 @@ router.post('/register', AuthController.register);
 router.post('/login', AuthController.login);
 router.post('/google_login', AuthController.loginGoogle);
 router.post('/authenticate', AuthController.authenticate);
-router.post('/editProfile', ProfileController.editProfile);
+router.put('/editProfile', ProfileController.editProfile);
 
 module.exports = router;
