@@ -3,7 +3,7 @@
 const express = require('express');
 require('dotenv').config();
 const indexRouter = require('./routes/index');
-const apiRouter = require('./routes/api');
+const usersRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth');
 const mongoose = require('mongoose');
 const apiResponse = require('./utils/responses');
@@ -29,8 +29,8 @@ app.use(express.urlencoded({ extended: false }));
 
 //Router prefix
 app.use('/', indexRouter);
-app.use('/api/', apiRouter);
-app.use('/user', authRoutes);
+app.use('/users', usersRoutes);
+app.use('/auth', authRoutes);
 
 // throw 404 if URL not found
 app.all('*', function(req, res, next) {

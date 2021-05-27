@@ -7,26 +7,7 @@ const jwt = require('jsonwebtoken');
 const hash = require('../utils/hashUtil');
 
 // validation
-const { registerValidation, loginValidation, authenticateValidation } = require('../validation');
-
-exports.register = [
-	async (req, res, next) => {
-		// validate the user
-		try {
-			const {error} = await registerValidation(req.body);
-
-			// throw validation errors
-			if (error) {
-				throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
-			}
-
-			const userData = await UserService.createUser(req.body);
-			return responses.statusOk(res, userData);
-		} catch (e) {
-			next(e);
-		}
-	}
-];
+const { loginValidation, authenticateValidation } = require('../validation');
 
 exports.login = [
 	async (req, res, next) => {
