@@ -110,12 +110,13 @@ describe('GET /users', () => {
 
     beforeAll(() => {
         getUsersSpy = jest.spyOn(UserService, 'getUsers');
+    });
+
+    test('get users paginated successfully', async () => {
         getUsersSpy.mockImplementation(() => {
             return Promise.resolve(mockedPaginatedUsers);
         });
-    });
 
-    test('gets users paginated', async () => {
         const res = await request.get('/users');
         expect(res.status).toBe(200);
 
@@ -125,6 +126,15 @@ describe('GET /users', () => {
         expect(parsedBody.totalPages).toBe(mockedPaginatedUsers.totalPages);
         expect(parsedBody.currentPage).toBe(mockedPaginatedUsers.page - 1);
     });
+
+    test('get users paginated failed', async () => {
+        getUsersSpy.mockImplementation(() => {
+            throw Error();
+        });
+
+        const res = await request.get('/users');
+        expect(res.status).toBe(500);
+    })
 });
 
 describe('GET /users/:id', () => {
