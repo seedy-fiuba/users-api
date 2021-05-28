@@ -43,14 +43,14 @@ beforeEach(() => {
     }
 });
 
+afterEach(() => {
+    jest.clearAllMocks();
+})
+
 describe('POST /users', () => {
     beforeEach(() => {
         mockingoose(userModel).reset();
         mockingoose(userModel).toReturn(mockedUserPayload, 'save');
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
     });
 
     test('Creates user successfully when register with email and password', async () => {
@@ -112,7 +112,7 @@ describe('GET /users', () => {
         getUsersSpy = jest.spyOn(UserService, 'getUsers');
         getUsersSpy.mockImplementation(() => {
             return Promise.resolve(mockedPaginatedUsers);
-        })
+        });
     });
 
     test('gets users paginated', async () => {
@@ -120,9 +120,35 @@ describe('GET /users', () => {
         expect(res.status).toBe(200);
 
         let parsedBody = JSON.parse(res.text);
-        expect(parsedBody.totalItems).toBe(2);
-        expect(parsedBody.users.length).toBe(2);
-        expect(parsedBody.totalPages).toBe(1);
-        expect(parsedBody.currentPage).toBe(0);
+        expect(parsedBody.totalItems).toBe(mockedPaginatedUsers.totalDocs);
+        expect(parsedBody.users.length).toBe(mockedPaginatedUsers.docs.length);
+        expect(parsedBody.totalPages).toBe(mockedPaginatedUsers.totalPages);
+        expect(parsedBody.currentPage).toBe(mockedPaginatedUsers.page - 1);
+    });
+});
+
+describe('GET /users/:id', () => {
+    let getUserSpy;
+    beforeEach(() => {
+        getUserSpy = jest.spyOn(UserService, 'getUserById');
+    });
+
+    test('Gets user successfully', async () => {
+        getUserSpy.mockImplementation(() => {
+            return mockedUserPayload;
+        })
+
+        const res = await request.get('/users/1');
+        expect(res.status).toBe(200);
+        expect(JSON.parse(res.text)).toMatchObject(mockedUserPayload);
+    });
+
+    test('Gets 404 if user does not exist', async() => {
+        getUserSpy.mockImplementation(() => {
+            return undefined;
+        })
+
+        const res = await request.get('/users/2');
+        expect(res.status).toBe(404);
     });
 });

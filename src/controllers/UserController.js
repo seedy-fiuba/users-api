@@ -44,7 +44,11 @@ exports.getUsers = async (req, res, next) => {
 
 exports.getUser = async (req, res, next) => {
     try {
-        responses.notImplementedError(res);
+        // TODO: validate user info based on token
+        let user = await UserService.getUserById(req.params.id);
+        if (!user)
+            throw new UserError(constants.error.NOT_FOUND, "User not found");
+        return responses.statusOk(res, user);
     } catch (e) {
         next(e);
     }

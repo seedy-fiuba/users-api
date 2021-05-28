@@ -43,9 +43,14 @@ const getUsers = async (page, size) => {
 	return User.paginate({}, {offset: offset, limit: limit, select: '-password'});
 }
 
+const getUserById = async (id) => {
+	return User.findById(id).select('-password');
+}
+
 module.exports = {
 	createUser,
 	getUserByMail,
-	getUsers
+	getUsers,
+	getUserById
 };
 
