@@ -23,7 +23,20 @@ exports.createUser = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
     try {
-        responses.notImplementedError(res);
+        const { page, size } = req.query;
+        await UserService.getUsers(page, size)
+            .then((result) => {
+                let bodyResponse = {
+                    totalItems: result.totalDocs,
+                    users: result.docs,
+                    totalPages: result.totalPages,
+                    currentPage: result.page - 1
+                }
+
+                return responses.statusOk(res, bodyResponse);
+            }).catch((err) => {
+                throw new UserError(constants.error.UNEXPECTED_ERROR, err);
+            });
     } catch (e) {
         next(e);
     }

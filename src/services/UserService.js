@@ -36,8 +36,18 @@ const getUserByMail = async (email) => {
 	return User.findOne({ email: email });
 };
 
+const getUsers = async (page, size) => {
+	const limit = size ? +size : 10;
+	const offset = page ? page * limit : 0;
+	//var resultUsers;
+
+	return User.paginate({}, {offset: offset, limit: limit})
+	//return resultUsers
+}
+
 module.exports = {
 	createUser,
-	getUserByMail
+	getUserByMail,
+	getUsers
 };
 
