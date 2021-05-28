@@ -39,10 +39,8 @@ const getUserByMail = async (email) => {
 const getUsers = async (page, size) => {
 	const limit = size ? +size : 10;
 	const offset = page ? page * limit : 0;
-	//var resultUsers;
 
-	return User.paginate({}, {offset: offset, limit: limit})
-	//return resultUsers
+	return User.paginate({}, {offset: offset, limit: limit, select: '-password'});
 }
 
 module.exports = {
