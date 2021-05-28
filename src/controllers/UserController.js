@@ -54,7 +54,7 @@ exports.getUser = async (req, res, next) => {
     }
 };
 
-
+/*
 exports.updateUser = async (req, res, next) => {
     try {
         responses.notImplementedError(res);
@@ -70,3 +70,4 @@ exports.deleteUser = async (req, res, next) => {
         next(e);
     }
 };
+*/
