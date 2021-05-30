@@ -2,31 +2,29 @@ let UserService = require('../services/UserService');
 const UserError = require('../exceptions/UserError');
 const responses = require('../utils/responses');
 const constants = require('../utils/constants');
+const User = require('../models/User');
 
 exports.setUserService = (service) => {
   UserService = service;
 };
-
+/*
 exports.updateUser = [
   async (req, res, next) => {
     try {
-      const filter =  await UserService.getUserByMail();
+      const user =  await UserService.getUserByMail();
       // throw error when email is wrong
-      if (!filter)
+      if (!user)
         throw new UserError(constants.error.BAD_REQUEST, 'No user registered with this email.');
 
-      let doc =  await UserService.updateUserByMail(req.body.email, req.body.description);
+      let doc =  await UserService.updateUserByID(user._id, req.body.description);
       return responses.statusOk(res, doc);
     } catch(e) {
       next(e);
     }
   }
-];
+];*/
 
 const { registerValidation } = require('../validation');
-const UserError = require('../exceptions/UserError');
-const constants = require('../utils/constants');
-const responses = require('../utils/responses');
 
 exports.createUser = async (req, res, next) => {
     // validate the user
@@ -78,15 +76,24 @@ exports.getUser = async (req, res, next) => {
     }
 };
 
-/*
+
 exports.updateUser = async (req, res, next) => {
     try {
-        responses.notImplementedError(res);
+        User.findByIdAndUpdate(
+          {_id: req.params.id },
+          {description: req.body.description},
+          {new: true},
+          function(err, result) {
+              if (!result) {
+                  return responses.notFoundResponse(res, err);
+              }
+              return responses.statusOk(res, result);
+          });
     } catch (e) {
         next(e);
     }
 };
-
+/*
 exports.deleteUser = async (req, res, next) => {
     try {
         responses.notImplementedError(res);

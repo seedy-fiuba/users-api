@@ -36,12 +36,6 @@ const getUserByMail = async (email) => {
 	return User.findOne({ email: email });
 };
 
-const updateUserByMail = async (email, update) => {
-	return User.findOneAndUpdate(email, update, {
-		new: true
-	});
-};
-
 const getUsers = async (page, size) => {
 	const limit = size ? +size : 10;
 	const offset = page ? page * limit : 0;
@@ -56,7 +50,6 @@ const getUserById = async (id) => {
 module.exports = {
 	createUser,
 	getUserByMail,
-	updateUserByMail,
 	getUsers,
 	getUserById
 };

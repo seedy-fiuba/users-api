@@ -161,4 +161,22 @@ describe('GET /users/:id', () => {
         const res = await request.get('/users/2');
         expect(res.status).toBe(404);
     });
+})
+
+describe('PUT /users/:id', () => {
+    let mockedUser;
+    beforeEach(() => {
+        mockingoose(userModel).reset();
+        mockedUser._id = 1;
+    });
+
+    test('Updates user successfully', async () => {
+        const res = await request.put('/users/1');
+        expect(res.status).toBe(200);
+    });
+
+    test('Gets 404 if user does not exist', async() => {
+        const res = await request.put('/users/2');
+        expect(res.status).toBe(404);
+    });
 });
