@@ -1,15 +1,14 @@
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
 const constants = require('../utils/constants');
 const UserError = require('../exceptions/UserError');
+const hash = require('../utils/hashUtil');
 
 const createUser = async (data) => {
 	const userData = await getUserByMail(data.email);
 	if (userData)
 		throw new UserError(constants.error.CONFLICT_ERROR, 'User already registered');
 
-	const salt = await bcrypt.genSalt(10);
-	let password = await bcrypt.hash(data.password, salt);
+	let password = await hash.encrypt(data.password);
 
 	const user = new User({
 		name: data.name,
@@ -43,9 +42,22 @@ const updateUserByMail = async (email, update) => {
 	});
 };
 
+const getUsers = async (page, size) => {
+	const limit = size ? +size : 10;
+	const offset = page ? page * limit : 0;
+
+	return User.paginate({}, {offset: offset, limit: limit, select: '-password'});
+}
+
+const getUserById = async (id) => {
+	return User.findById(id).select('-password');
+}
+
 module.exports = {
 	createUser,
 	getUserByMail,
-	updateUserByMail
+	updateUserByMail,
+	getUsers,
+	getUserById
 };
 
