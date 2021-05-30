@@ -7,16 +7,15 @@ exports.setUserService = (service) => {
   UserService = service;
 };
 
-exports.editProfile = [
+exports.updateUser = [
   async (req, res, next) => {
     try {
-      const filter =  await UserService.getUserByMail(req.body.email);
+      const filter =  await UserService.getUserByMail();
       // throw error when email is wrong
       if (!filter)
         throw new UserError(constants.error.BAD_REQUEST, 'No user registered with this email.');
 
-      const update = {name: req.body.name, lastName: req.body.lastName, password: req.body.password, description: req.body.description};
-      let doc =  await UserService.updateUserByMail(filter, update);
+      let doc =  await UserService.updateUserByMail(req.body.email, req.body.description);
       return responses.statusOk(res, doc);
     } catch(e) {
       next(e);
