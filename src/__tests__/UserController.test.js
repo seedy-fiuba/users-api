@@ -12,8 +12,8 @@ beforeEach(() => {
     mockedUserPayload = {
         name: 'jose',
         lastName: 'sbruzzi',
-        email: 'tumama@gmail.com',
-        password: 'contraReLoca',
+        email: 'josbruzzi@gmail.com',
+        password: 'PanTostado31',
         role: 'sponsor'
     };
     mockedPaginatedUsers = {
@@ -167,11 +167,13 @@ describe('PUT /users/:id', () => {
     let mockedUser;
     beforeEach(() => {
         mockingoose(userModel).reset();
+        mockingoose(userModel).toReturn(mockedUser, 'save');
         mockedUser._id = 1;
+        mockedUser.description = "maracachimba";
     });
 
     test('Updates user successfully', async () => {
-        const res = await request.put('/users/1');
+        const res = await request.put('/users/1').send(mockedUser);
         expect(res.status).toBe(200);
     });
 
