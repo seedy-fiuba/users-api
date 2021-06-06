@@ -167,9 +167,9 @@ describe('PUT /users/:id', () => {
     let mockedUser;
     beforeEach(() => {
         mockingoose(userModel).reset();
-        mockingoose(userModel).toReturn(mockedUser, 'save');
-        mockedUser._id = 1;
+        mockedUser.id = 1;
         mockedUser.description = "maracachimba";
+        mockingoose(userModel).toReturn(mockedUserPayload, 'save');
     });
 
     test('Updates user successfully', async () => {
