@@ -167,13 +167,13 @@ describe('PUT /users/:id', () => {
     let mockedUser;
     beforeEach(() => {
         mockingoose(userModel).reset();
-        mockedUser.id = 1;
-        mockedUser.description = "maracachimba";
+        mockedUserPayload.id = 1;
+        mockedUserPayload.description = "maracachimba";
         mockingoose(userModel).toReturn(mockedUserPayload, 'save');
     });
 
     test('Updates user successfully', async () => {
-        const res = await request.put('/users/1').send(mockedUser);
+        const res = await request.put('/users/1').send(mockedUserPayload);
         expect(res.status).toBe(200);
     });
 
