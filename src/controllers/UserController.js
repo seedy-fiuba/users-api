@@ -2,7 +2,6 @@ let UserService = require('../services/UserService');
 const UserError = require('../exceptions/UserError');
 const responses = require('../utils/responses');
 const constants = require('../utils/constants');
-const User = require('../models/User');
 
 exports.setUserService = (service) => {
   UserService = service;
@@ -79,16 +78,12 @@ exports.getUser = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
     try {
-        User.findByIdAndUpdate(
-          {_id: req.params.id },
-          {description: req.body.description},
-          {new: true},
-          function(err, result) {
-              if (!result) {
-                  return responses.notFoundResponse(res, err);
-              }
-              return responses.statusOk(res, result);
-          });
+        let result = await UserService.updateUserById(req.params.id, req.body.description);
+        if (!result) {
+            return responses.notFoundResponse(res, "User not found");
+        }
+        return responses.statusOk(res, result);
+
     } catch (e) {
         next(e);
     }

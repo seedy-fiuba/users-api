@@ -47,10 +47,18 @@ const getUserById = async (id) => {
 	return User.findById(id).select('-password');
 }
 
+const updateUserById = async(id, description) => {
+	return User.findByIdAndUpdate(
+		{_id: id },
+		{description: description},
+		{new: true});
+}
+
 module.exports = {
 	createUser,
 	getUserByMail,
 	getUsers,
-	getUserById
+	getUserById,
+	updateUserById
 };
 
