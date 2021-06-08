@@ -36,8 +36,21 @@ const getUserByMail = async (email) => {
 	return User.findOne({ email: email });
 };
 
+const getUsers = async (page, size) => {
+	const limit = size ? +size : 10;
+	const offset = page ? page * limit : 0;
+
+	return User.paginate({}, {offset: offset, limit: limit, select: '-password'});
+}
+
+const getUserById = async (id) => {
+	return User.findById(id).select('-password');
+}
+
 module.exports = {
 	createUser,
-	getUserByMail
+	getUserByMail,
+	getUsers,
+	getUserById
 };
 

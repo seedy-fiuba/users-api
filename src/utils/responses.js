@@ -1,5 +1,5 @@
 exports.notFoundResponse = function (res, msg) {
-	var data = {
+	const data = {
 		status: 404,
 		message: msg,
 	};
@@ -7,7 +7,7 @@ exports.notFoundResponse = function (res, msg) {
 };
 
 exports.unauthorizedResponse = function (res, msg) {
-	var data = {
+	const data = {
 		status: 401,
 		message: msg,
 	};
@@ -15,12 +15,20 @@ exports.unauthorizedResponse = function (res, msg) {
 };
 
 exports.unexpectedError = function (res, msg) {
-	var data = {
+	const data = {
 		status: 500,
 		message: msg,
 	};
 	return res.status(500).json(data);
 };
+
+exports.notImplementedError = function (res) {
+	const data = {
+		status: 501,
+		message: 'Not implemented'
+	}
+	return res.status(501).json(data);
+}
 
 exports.createdOk = function (res, data) {
 	return res.status(201).json(data);
@@ -31,7 +39,7 @@ exports.statusOk = function (res, data) {
 };
 
 exports.badRequest = function (res, msg) {
-	var data = {
+	const data = {
 		status: 400,
 		message: msg,
 	};
@@ -39,7 +47,7 @@ exports.badRequest = function (res, msg) {
 };
 
 exports.conflictError = function (res, msg) {
-	var data = {
+	const data = {
 		status: 409,
 		message: msg
 	};
