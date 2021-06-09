@@ -2,6 +2,7 @@ const User = require('../models/User');
 const constants = require('../utils/constants');
 const UserError = require('../exceptions/UserError');
 const hash = require('../utils/hashUtil');
+var metrics = require('datadog-metrics');
 
 const createUser = async (data) => {
 	const userData = await getUserByMail(data.email);
@@ -20,6 +21,7 @@ const createUser = async (data) => {
 
 	try {
 		const savedUser = await user.save(); //save user in database
+		metrics.increment('traditional.register');
 		return {
 			id: savedUser._id,
 			name: savedUser.name,
