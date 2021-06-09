@@ -123,7 +123,7 @@ async function googleVerify(req, res, clientId, client) {
 	const token = jwt.sign(
 		{
 			name: userData.name,
-			id: userData._id,
+			id: userData.id,
 		},
 		process.env.TOKEN_SECRET,
 		{
@@ -137,7 +137,7 @@ async function googleVerify(req, res, clientId, client) {
 	} else {
 		metricKey = 'federated.login';
 	}
-	metrics.increment(metricKey, 1, ['id:' + userData._id, 'role:' + userData.role]);
+	metrics.increment(metricKey, 1, ['id:' + userData.id, 'role:' + userData.role]);
 
 	responses.statusOk(res, {'user': userData, 'token': token});
 }
