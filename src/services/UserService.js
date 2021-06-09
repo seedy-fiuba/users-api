@@ -21,7 +21,7 @@ const createUser = async (data) => {
 
 	try {
 		const savedUser = await user.save(); //save user in database
-		metrics.increment('traditional.register');
+		metrics.increment('traditional.register', 1, ['id:' + savedUser._id, 'role:' + savedUser.role]);
 		return {
 			id: savedUser._id,
 			name: savedUser.name,
