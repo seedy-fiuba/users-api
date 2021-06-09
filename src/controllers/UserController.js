@@ -3,6 +3,7 @@ const { registerValidation } = require('../validation');
 const UserError = require('../exceptions/UserError');
 const constants = require('../utils/constants');
 const responses = require('../utils/responses');
+var metrics = require('datadog-metrics');
 
 exports.createUser = async (req, res, next) => {
     // validate the user
@@ -15,6 +16,7 @@ exports.createUser = async (req, res, next) => {
         }
 
         const userData = await UserService.createUser(req.body);
+        metrics.increment('traditional.register', 1, ['id:' + userData.id, 'role:' + userData.role]);
         return responses.statusOk(res, userData);
     } catch (e) {
         next(e);

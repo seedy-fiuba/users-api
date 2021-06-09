@@ -5,6 +5,7 @@ const UserError = require('../exceptions/UserError');
 const constants = require('../utils/constants');
 const jwt = require('jsonwebtoken');
 const hash = require('../utils/hashUtil');
+var metrics = require('datadog-metrics');
 
 // validation
 const { loginValidation, authenticateValidation } = require('../validation');
@@ -35,7 +36,7 @@ exports.login = [
 				// payload data
 				{
 					email: user.email,
-					id: user._id,
+					id: user.id,
 				},
 				process.env.TOKEN_SECRET,
 				{
@@ -43,6 +44,7 @@ exports.login = [
 				}
 			);
 
+			metrics.increment('traditional.login', 1, ['id:' + user.id, 'role:' + user.role]);
 			responses.statusOk(res, {
 				user: user,
 				token: token
@@ -102,6 +104,7 @@ async function googleVerify(req, res, clientId, client) {
 		audience: clientId,
 	});
 	const payload = ticket.getPayload();
+	var registering = false;
 
 	var userData = await UserService.getUserByMail(payload['email']);
 	if (!userData) {
@@ -114,6 +117,7 @@ async function googleVerify(req, res, clientId, client) {
 		};
 
 		userData = await UserService.createUser(userPayload);
+		registering = true;
 	}
 
 	const token = jwt.sign(
@@ -126,6 +130,14 @@ async function googleVerify(req, res, clientId, client) {
 			expiresIn: 30
 		}
 	);
+
+	var metricKey;
+	if (registering) {
+		metricKey = 'federated.register';
+	} else {
+		metricKey = 'federated.login';
+	}
+	metrics.increment(metricKey, 1, ['id:' + userData._id, 'role:' + userData.role]);
 
 	responses.statusOk(res, {'user': userData, 'token': token});
 }
