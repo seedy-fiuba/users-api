@@ -2,6 +2,7 @@ const User = require('../models/User');
 const constants = require('../utils/constants');
 const UserError = require('../exceptions/UserError');
 const hash = require('../utils/hashUtil');
+const tracer = require('dd-trace');
 
 const createUser = async (data) => {
 	const userData = await getUserByMail(data.email);
@@ -19,7 +20,10 @@ const createUser = async (data) => {
 	});
 
 	try {
-		const savedUser = await user.save(); //save user in database
+		var savedUser;
+		tracer.trace('users.register', async () => {
+			savedUser = await user.save(); //save user in database
+		})
 		return {
 			id: savedUser._id,
 			name: savedUser.name,

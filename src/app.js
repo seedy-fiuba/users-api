@@ -1,6 +1,6 @@
 'use strict';
 
-const tracer = require('dd-trace').init();
+require('dd-trace').init();
 const server = require('./server');
 
 // Constants
