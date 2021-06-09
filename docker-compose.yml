@@ -31,6 +31,8 @@ services:
       - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
     networks:
       - users-nerwork
+    ports:
+      - "8126:8126/tcp"
 networks:
   users-network:
     driver: bridge
