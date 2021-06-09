@@ -32,6 +32,7 @@ const createUser = async (data) => {
 			role: savedUser.role
 		};
 	} catch (error) {
+		console.log("[ERROR] - " + error.message);
 		throw new UserError(constants.error.UNEXPECTED_ERROR, 'Couldnt save user');
 	}
 };
