@@ -32,7 +32,7 @@ services:
     networks:
       - users-nerwork
     ports:
-      - "8126:8126/tcp"
+      - "127.0.0.1:8126:8126/tcp"
 networks:
   users-network:
     driver: bridge
