@@ -3,10 +3,6 @@ const UserError = require('../exceptions/UserError');
 const responses = require('../utils/responses');
 const constants = require('../utils/constants');
 
-exports.setUserService = (service) => {
-  UserService = service;
-};
-
 const { registerValidation } = require('../validation');
 
 exports.createUser = async (req, res, next) => {
