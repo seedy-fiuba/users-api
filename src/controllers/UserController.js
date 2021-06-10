@@ -6,22 +6,6 @@ const constants = require('../utils/constants');
 exports.setUserService = (service) => {
   UserService = service;
 };
-/*
-exports.updateUser = [
-  async (req, res, next) => {
-    try {
-      const user =  await UserService.getUserByMail();
-      // throw error when email is wrong
-      if (!user)
-        throw new UserError(constants.error.BAD_REQUEST, 'No user registered with this email.');
-
-      let doc =  await UserService.updateUserByID(user._id, req.body.description);
-      return responses.statusOk(res, doc);
-    } catch(e) {
-      next(e);
-    }
-  }
-];*/
 
 const { registerValidation } = require('../validation');
 
