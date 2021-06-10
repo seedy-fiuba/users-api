@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const mongoose = require('mongoose');
 const apiResponse = require('./utils/responses');
 const constants = require('./utils/constants');
+const cors = require('cors');
 
 // DB connection
 let MONGODB_URL = process.env.MONGODB_URL;
@@ -26,6 +27,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
 //Router prefix
 app.use('/', indexRouter);
