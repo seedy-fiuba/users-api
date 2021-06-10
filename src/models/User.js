@@ -9,7 +9,8 @@ const UserSchema = new Schema({
 		lastName: { type: String, required: true},
 		email: { type: String, required: true},
 		password: { type: String, required: true},
-		role: { type: String, required: true}
+		role: { type: String, required: true},
+		description : {type: String, required: false}
 	},
 	{
 		timestamps: true, // timestamps adds "createdAt" and "updatedAt" fields
