@@ -26,6 +26,14 @@ const authenticateValidation = (data) => {
 	return schema.validate(data);
 };
 
+const reviewValidator = (data) => {
+	const schema = Joi.object({
+		'reviewerId': Joi.number().min(0),
+		'projectId': Joi.number().min(0)
+	});
+	return schema.validate(data);
+}
+
 module.exports = {
-	registerValidation, loginValidation, authenticateValidation
+	registerValidation, loginValidation, authenticateValidation, reviewValidator
 };
