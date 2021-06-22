@@ -1,9 +1,10 @@
 let UserService = require('../services/UserService');
-const { registerValidation } = require('../validation');
 const UserError = require('../exceptions/UserError');
-const constants = require('../utils/constants');
 const responses = require('../utils/responses');
+const constants = require('../utils/constants');
 var metrics = require('datadog-metrics');
+
+const { registerValidation } = require('../validation');
 
 exports.createUser = async (req, res, next) => {
     // validate the user
@@ -56,15 +57,20 @@ exports.getUser = async (req, res, next) => {
     }
 };
 
-/*
+
 exports.updateUser = async (req, res, next) => {
     try {
-        responses.notImplementedError(res);
+        let result = await UserService.updateUserById(req.params.id, req.body.description);
+        if (!result) {
+            return responses.notFoundResponse(res, "User not found");
+        }
+        return responses.statusOk(res, result);
+
     } catch (e) {
         next(e);
     }
 };
-
+/*
 exports.deleteUser = async (req, res, next) => {
     try {
         responses.notImplementedError(res);
@@ -73,3 +79,4 @@ exports.deleteUser = async (req, res, next) => {
     }
 };
 */
+

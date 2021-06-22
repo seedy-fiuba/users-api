@@ -12,9 +12,9 @@ beforeEach(() => {
     mockedUserPayload = {
         name: 'jose',
         lastName: 'sbruzzi',
-        email: 'tumama@gmail.com',
-        password: 'contraReLoca',
-        role: 'sponsor'
+        email: 'josbruzzi@gmail.com',
+        password: 'PanTostado31',
+        role: 'sponsor',
     };
     mockedPaginatedUsers = {
         docs: [
@@ -159,6 +159,33 @@ describe('GET /users/:id', () => {
         })
 
         const res = await request.get('/users/2');
+        expect(res.status).toBe(404);
+    });
+})
+
+describe('PUT /users/:id', () => {
+    let updateUserByIdSpy;
+    beforeEach(() => {
+        mockedUserPayload.description = 'ñsdvsñdvosdjv';
+        updateUserByIdSpy = jest.spyOn(UserService, 'updateUserById');
+    });
+
+    test('Updates user successfully', async () => {
+        updateUserByIdSpy.mockImplementation(() => {
+            return mockedUserPayload;
+        })
+
+        const res = await request.put('/users/1').send(mockedUserPayload);
+
+        expect(updateUserByIdSpy).toHaveBeenCalledWith('1', 'ñsdvsñdvosdjv');
+        expect(res.status).toBe(200);
+    });
+
+    test('Gets 404 if user does not exist', async() => {
+        updateUserByIdSpy.mockImplementation(() => {
+            return undefined;
+        })
+        const res = await request.put('/users/2');
         expect(res.status).toBe(404);
     });
 });
