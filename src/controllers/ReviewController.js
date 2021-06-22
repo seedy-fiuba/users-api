@@ -1,5 +1,4 @@
 let ReviewService = require('../services/ReviewService');
-let UserService = require('../services/UserService');
 const UserError = require('../exceptions/UserError');
 const responses = require('../utils/responses');
 const constants = require('../utils/constants');
