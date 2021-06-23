@@ -28,8 +28,8 @@ const authenticateValidation = (data) => {
 
 const reviewValidator = (data) => {
 	const schema = Joi.object({
-		'reviewerId': Joi.number().min(0),
-		'projectId': Joi.number().min(0)
+		'reviewerId': Joi.number().min(0).required(),
+		'projectId': Joi.number().min(0).required()
 	});
 	return schema.validate(data);
 }

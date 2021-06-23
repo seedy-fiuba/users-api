@@ -1,9 +1,5 @@
 'use strict';
 
-require('dotenv').config();
-var metrics = require('datadog-metrics');
-metrics.init({ host: 'myhost', prefix: 'users.' });
-
 const server = require('./server');
 
 // Constants

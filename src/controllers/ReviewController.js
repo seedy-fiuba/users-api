@@ -5,24 +5,42 @@ const constants = require('../utils/constants');
 
 const { reviewValidator } = require('../validation');
 
-exports.createReviewRequest = async (req, res) => {
-    // Validate body
-    const {error} = await reviewValidator(req.body);
+const VALID_STATUSES = ['pending','approved','rejected'];
 
-    // throw validation errors
-    if (error) {
-        throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
+exports.createReviewRequest = async (req, res, next) => {
+    try {
+        // Validate body
+        const {error} = await reviewValidator(req.body);
+
+        // throw validation errors
+        if (error) {
+            throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
+        }
+
+        // Create review request
+        const reviewData = await ReviewService.createReviewRequest(req.body);
+        return responses.createdOk(res, reviewData);
+    } catch (e) {
+        next(e);
     }
-
-    // Create review request
-    const reviewData = await ReviewService.createReviewRequest(req.body);
-    return responses.createdOk(res, reviewData);
 };
 
-exports.deleteReviewRequest = async (req, res) => {
-    // reviewerId y projectId deberia venir en query params -> validate
+exports.updateReviewRequest = async (req, res, next) => {
+    try {
+        let reviewId = req.params.id;
+        let payload = req.body;
 
-    // Borrar review request
+        if (payload['status'] && !VALID_STATUSES.includes(payload['status'])) {
+            throw new UserError(constants.error.BAD_REQUEST, 'Status is invalid. Valid statuses are: ' + VALID_STATUSES);
+        }
 
-    return responses.noContent(res);
+        if (!payload['status']) {
+            throw new UserError(constants.error.BAD_REQUEST, 'Status field is required');
+        }
+
+        const reviewData = await ReviewService.updateReviewRequest(reviewId, req.body);
+        return responses.statusOk(res, reviewData);
+    } catch (e) {
+        next(e);
+    }
 }

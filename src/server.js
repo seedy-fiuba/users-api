@@ -1,5 +1,8 @@
 'use strict';
 
+require('dotenv').config();
+const metrics = require('datadog-metrics');
+metrics.init({ host: 'myhost', prefix: 'users.' });
 const express = require('express');
 const indexRouter = require('./routes/index');
 const usersRoutes = require('./routes/users');
@@ -9,7 +12,6 @@ const mongoose = require('mongoose');
 const apiResponse = require('./utils/responses');
 const constants = require('./utils/constants');
 const cors = require('cors');
-require('express-async-errors');  // This is for catching errors from controllers and handle them in the next(), without using the next() keyword in the controllers
 
 // DB connection
 let MONGODB_URL = process.env.MONGODB_URL;

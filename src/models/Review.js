@@ -6,7 +6,8 @@ const Schema = mongoose.Schema;
 
 const ReviewSchema = new Schema({
         reviewerId: { type: Number, required: true},
-        projectId: { type: Number, required: true}
+        projectId: { type: Number, required: true},
+        status: { type: String, required: true}
     },
     {
         timestamps: true, // timestamps adds "createdAt" and "updatedAt" fields

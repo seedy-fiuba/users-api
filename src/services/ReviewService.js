@@ -22,7 +22,8 @@ const createReviewRequest = async(data) => {
     // Create
     reviewRequest = new Review({
         reviewerId: data.reviewerId,
-        projectId: data.projectId
+        projectId: data.projectId,
+        status: 'pending'
     });
 
     try {
@@ -32,10 +33,20 @@ const createReviewRequest = async(data) => {
     }
 }
 
+const updateReviewRequest = async (reviewId, data) => {
+    return Review.findByIdAndUpdate(
+        {id: reviewId},
+        {status: data.status},
+        {new: true}
+    );
+}
+
 const getReviewRequest = async(reviewerId, projectId) => {
-    Review.findOne({reviewerId: reviewerId, projectId: projectId});
+    return Review.findOne({reviewerId: reviewerId, projectId: projectId});
 }
 
 module.exports = {
-    createReviewRequest
+    createReviewRequest,
+    updateReviewRequest,
+    getReviewRequest
 }
