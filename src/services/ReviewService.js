@@ -41,6 +41,20 @@ const updateReviewRequest = async (reviewId, data) => {
     );
 }
 
+const searchReviews = async (data) => {
+    let query = {};
+
+    if (data.reviewerId) {
+        query.reviewerId = data.reviewerId;
+    }
+
+    if (data.status) {
+        query.status = data.status;
+    }
+
+    return Review.find(query);
+}
+
 const getReviewRequest = async(reviewerId, projectId) => {
     return Review.findOne({reviewerId: reviewerId, projectId: projectId});
 }
@@ -48,5 +62,6 @@ const getReviewRequest = async(reviewerId, projectId) => {
 module.exports = {
     createReviewRequest,
     updateReviewRequest,
-    getReviewRequest
+    getReviewRequest,
+    searchReviews
 }

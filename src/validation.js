@@ -27,6 +27,7 @@ const authenticateValidation = (data) => {
 };
 
 const reviewValidator = (data) => {
+
 	const schema = Joi.object({
 		'reviewerId': Joi.number().min(0).required(),
 		'projectId': Joi.number().min(0).required()
@@ -34,6 +35,14 @@ const reviewValidator = (data) => {
 	return schema.validate(data);
 }
 
+const searchReviewValidator = (data) => {
+	const schema = Joi.object({
+		'reviewerId': Joi.number(),
+		'status': Joi.string().valid('pending','approved','rejected')
+	});
+	return schema.validate(data);
+}
+
 module.exports = {
-	registerValidation, loginValidation, authenticateValidation, reviewValidator
+	registerValidation, loginValidation, authenticateValidation, reviewValidator, searchReviewValidator
 };

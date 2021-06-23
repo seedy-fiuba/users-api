@@ -3,7 +3,7 @@ const UserError = require('../exceptions/UserError');
 const responses = require('../utils/responses');
 const constants = require('../utils/constants');
 
-const { reviewValidator } = require('../validation');
+const { reviewValidator, searchReviewValidator } = require('../validation');
 
 const VALID_STATUSES = ['pending','approved','rejected'];
 
@@ -40,6 +40,23 @@ exports.updateReviewRequest = async (req, res, next) => {
 
         const reviewData = await ReviewService.updateReviewRequest(reviewId, req.body);
         return responses.statusOk(res, reviewData);
+    } catch (e) {
+        next(e);
+    }
+}
+
+exports.searchReviews = async(req, res, next) => {
+    try {
+        let {value, error} = await searchReviewValidator(req.query);
+        if (error) {
+            throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
+        }
+
+        let response = await ReviewService.searchReviews(value);
+        return responses.statusOk(res, {
+            size: response.length,
+            results: response
+        });
     } catch (e) {
         next(e);
     }

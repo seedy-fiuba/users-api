@@ -133,4 +133,43 @@ describe('PUT /reviews/:id', () => {
         let parsedResponse = JSON.parse(res.text);
         expect(parsedResponse.message).toContain('Status field is required');
     })
+});
+
+describe('GET /reviews', () => {
+    beforeEach(() => {
+        mockingoose(reviewModel).reset();
+        mockingoose(reviewModel).toReturn(
+            [
+                {
+                    reviewerId: 1,
+                    projectId: 2,
+                    status: 'approved'
+                },
+                {
+                    reviewerId: 1,
+                    projectId: 4,
+                    status: 'rejected'
+                }
+            ], 'find');
+    });
+
+    test('Gets all reviews', async () => {
+        const res = await request.get('/reviews?reviewerId=1');
+        expect(res.status).toBe(200);
+
+        let parsedResponse = JSON.parse(res.text);
+        expect(parsedResponse.size).toBe(2);
+        expect(parsedResponse.results[0].reviewerId).toBe(1);
+        expect(parsedResponse.results[1].reviewerId).toBe(1);
+    })
+
+    test('Gets all reviews with invalid status', async () => {
+        const res = await request.get('/reviews?reviewerId=1&status=invalid');
+        expect(res.status).toBe(400);
+
+        console.log(res.text);
+
+        let parsedResponse = JSON.parse(res.text);
+        expect(parsedResponse.message).toContain('\"status\" must be one of [pending, approved, rejected]');
+    })
 })
