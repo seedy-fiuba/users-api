@@ -35,7 +35,7 @@ const createReviewRequest = async(data) => {
 
 const updateReviewRequest = async (reviewId, data) => {
     return Review.findByIdAndUpdate(
-        {id: reviewId},
+        {_id: reviewId},
         {status: data.status},
         {new: true}
     );

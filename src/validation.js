@@ -43,6 +43,20 @@ const searchReviewValidator = (data) => {
 	return schema.validate(data);
 }
 
+const searchUsersValidator = (data) => {
+	const schema = Joi.object({
+		'size': Joi.number(),
+		'page': Joi.number(),
+		'role': Joi.string().valid('sponsor', 'entrepreneur', 'reviewer', 'admin')
+	});
+	return schema.validate(data);
+}
+
 module.exports = {
-	registerValidation, loginValidation, authenticateValidation, reviewValidator, searchReviewValidator
+	registerValidation,
+	loginValidation,
+	authenticateValidation,
+	reviewValidator,
+	searchReviewValidator,
+	searchUsersValidator
 };
