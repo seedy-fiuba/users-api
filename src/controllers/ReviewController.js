@@ -39,6 +39,11 @@ exports.updateReviewRequest = async (req, res, next) => {
         }
 
         const reviewData = await ReviewService.updateReviewRequest(reviewId, req.body);
+
+        if (!reviewData) {
+            throw new UserError(constants.error.NOT_FOUND, 'Review not found');
+        }
+
         return responses.statusOk(res, reviewData);
     } catch (e) {
         next(e);
