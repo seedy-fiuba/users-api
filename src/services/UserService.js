@@ -3,7 +3,7 @@ const constants = require('../utils/constants');
 const UserError = require('../exceptions/UserError');
 const hash = require('../utils/hashUtil');
 
-const createUser = async (data) => {
+const createUser = async (data, wallet) => {
 	const userData = await getUserByMail(data.email);
 	if (userData)
 		throw new UserError(constants.error.CONFLICT_ERROR, 'User already registered');
@@ -15,7 +15,8 @@ const createUser = async (data) => {
 		lastName: data.lastName,
 		email: data.email,
 		password: password,
-		role: data.role
+		role: data.role,
+		wallet: wallet
 	});
 
 	try {
@@ -41,18 +42,18 @@ const getUsers = async (page, size) => {
 	const offset = page ? page * limit : 0;
 
 	return User.paginate({}, {offset: offset, limit: limit, select: '-password'});
-}
+};
 
 const getUserById = async (id) => {
 	return User.findById(id).select('-password');
-}
+};
 
 const updateUserById = async(id, description) => {
 	return User.findByIdAndUpdate(
 		{_id: id },
 		{description: description},
 		{new: true});
-}
+};
 
 module.exports = {
 	createUser,

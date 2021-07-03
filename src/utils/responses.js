@@ -26,9 +26,9 @@ exports.notImplementedError = function (res) {
 	const data = {
 		status: 501,
 		message: 'Not implemented'
-	}
+	};
 	return res.status(501).json(data);
-}
+};
 
 exports.createdOk = function (res, data) {
 	return res.status(201).json(data);
