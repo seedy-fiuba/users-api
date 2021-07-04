@@ -26,6 +26,37 @@ const authenticateValidation = (data) => {
 	return schema.validate(data);
 };
 
+const reviewValidator = (data) => {
+
+	const schema = Joi.object({
+		'reviewerId': Joi.number().min(0).required(),
+		'projectId': Joi.number().min(0).required()
+	});
+	return schema.validate(data);
+}
+
+const searchReviewValidator = (data) => {
+	const schema = Joi.object({
+		'reviewerId': Joi.number(),
+		'status': Joi.string().valid('pending','approved','rejected')
+	});
+	return schema.validate(data);
+}
+
+const searchUsersValidator = (data) => {
+	const schema = Joi.object({
+		'size': Joi.number(),
+		'page': Joi.number(),
+		'role': Joi.string().valid('sponsor', 'entrepreneur', 'reviewer', 'admin')
+	});
+	return schema.validate(data);
+}
+
 module.exports = {
-	registerValidation, loginValidation, authenticateValidation
+	registerValidation,
+	loginValidation,
+	authenticateValidation,
+	reviewValidator,
+	searchReviewValidator,
+	searchUsersValidator
 };

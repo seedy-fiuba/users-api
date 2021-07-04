@@ -53,3 +53,7 @@ exports.conflictError = function (res, msg) {
 	};
 	return res.status(409).json(data);
 };
+
+exports.noContent = function (res) {
+	return res.status(204);
+}

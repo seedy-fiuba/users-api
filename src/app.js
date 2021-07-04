@@ -1,8 +1,5 @@
 'use strict';
 
-var metrics = require('datadog-metrics');
-metrics.init({ host: 'myhost', prefix: 'users.' });
-
 const server = require('./server');
 
 // Constants
