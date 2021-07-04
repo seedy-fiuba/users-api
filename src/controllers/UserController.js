@@ -4,7 +4,7 @@ const responses = require('../utils/responses');
 const constants = require('../utils/constants');
 var metrics = require('datadog-metrics');
 
-const { registerValidation } = require('../validation');
+const { registerValidation, searchUsersValidator } = require('../validation');
 
 exports.createUser = async (req, res, next) => {
     // validate the user
@@ -26,8 +26,12 @@ exports.createUser = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
     try {
-        const { page, size } = req.query;
-        await UserService.getUsers(page, size)
+        let {value, error} = await searchUsersValidator(req.query);
+        if (error) {
+            throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
+        }
+
+        await UserService.getUsers(value)
             .then((result) => {
                 let bodyResponse = {
                     totalItems: result.totalDocs,

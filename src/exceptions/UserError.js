@@ -4,7 +4,7 @@ class UserError extends Error {
 
 		Object.setPrototypeOf(this, new.target.prototype);
 		this.name = name;
-		Error.captureStackTrace(this);
+		//Error.captureStackTrace(this);
 	}
 }
 

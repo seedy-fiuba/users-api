@@ -36,11 +36,16 @@ const getUserByMail = async (email) => {
 	return User.findOne({ email: email });
 };
 
-const getUsers = async (page, size) => {
-	const limit = size ? +size : 10;
-	const offset = page ? page * limit : 0;
+const getUsers = async (params) => {
+	const limit = params.size ? + params.size : 10;
+	const offset = params.page ? params.page * limit : 0;
+	let query = {};
 
-	return User.paginate({}, {offset: offset, limit: limit, select: '-password'});
+	if (params.role) {
+		query.role = params.role;
+	}
+
+	return User.paginate(query, {offset: offset, limit: limit, select: '-password'});
 }
 
 const getUserById = async (id) => {
