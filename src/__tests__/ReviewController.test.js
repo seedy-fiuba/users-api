@@ -133,6 +133,18 @@ describe('PUT /reviews/:id', () => {
 		let parsedResponse = JSON.parse(res.text);
 		expect(parsedResponse.message).toContain('Status field is required');
 	});
+
+	test('Does not update if review does not exist', async () => {
+		updateReviewByIdSpy.mockImplementation(() => {
+			return undefined;
+		});
+
+		const res = await request.put('/reviews/1').send({status: 'approved'});
+		expect(res.status).toBe(404);
+
+		let parsedResponse = JSON.parse(res.text);
+		expect(parsedResponse.message).toContain('Review not found');
+	})
 });
 
 describe('GET /reviews', () => {
