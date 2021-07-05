@@ -27,20 +27,20 @@ exports.createUser = async (req, res, next) => {
 };
 
 exports.getUsers = async (req, res, next) => {
-    try {
-        let {value, error} = await searchUsersValidator(req.query);
-        if (error) {
-            throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
-        }
+	try {
+		let {value, error} = await searchUsersValidator(req.query);
+		if (error) {
+			throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
+		}
 
-        await UserService.getUsers(value)
-            .then((result) => {
-                let bodyResponse = {
-                    totalItems: result.totalDocs,
-                    users: result.docs,
-                    totalPages: result.totalPages,
-                    currentPage: result.page - 1
-                }
+		await UserService.getUsers(value)
+			.then((result) => {
+				let bodyResponse = {
+					totalItems: result.totalDocs,
+					users: result.docs,
+					totalPages: result.totalPages,
+					currentPage: result.page - 1
+				};
 
 				return responses.statusOk(res, bodyResponse);
 			}).catch((err) => {

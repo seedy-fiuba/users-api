@@ -16,7 +16,8 @@ const createUser = async (data, wallet) => {
 		email: data.email,
 		password: password,
 		role: data.role,
-		wallet: wallet
+		walletAddress: wallet.walletAddress,
+		walletPrivateKey: wallet.walletPrivateKey
 	});
 
 	try {
@@ -26,9 +27,11 @@ const createUser = async (data, wallet) => {
 			name: savedUser.name,
 			lastName: savedUser.lastName,
 			email: savedUser.email,
-			role: savedUser.role
+			role: savedUser.role,
+			walletAddress: savedUser.walletAddress
 		};
 	} catch (error) {
+		// console.log(error);
 		throw new UserError(constants.error.UNEXPECTED_ERROR, 'Couldnt save user');
 	}
 };

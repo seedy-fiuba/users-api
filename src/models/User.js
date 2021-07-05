@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
 const mongoosePaginate = require('mongoose-paginate-v2');
-const Wallet = require('../models/Wallet');
 
 const Schema = mongoose.Schema;
 
@@ -12,7 +11,8 @@ const UserSchema = new Schema({
 	password: { type: String, required: true},
 	role: { type: String, required: true},
 	description : {type: String, required: false},
-	wallet : {type: Wallet, required: true}
+	walletAddress: { type: String, required: true},
+	walletPrivateKey: {type: String, required: true}
 },
 {
 	timestamps: true, // timestamps adds "createdAt" and "updatedAt" fields

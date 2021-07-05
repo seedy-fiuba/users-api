@@ -56,4 +56,4 @@ exports.conflictError = function (res, msg) {
 
 exports.noContent = function (res) {
 	return res.status(204);
-}
+};

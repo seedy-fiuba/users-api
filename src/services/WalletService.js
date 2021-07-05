@@ -4,7 +4,7 @@ const constants = require('../utils/constants');
 const createWallet = async() => {
 	let config = {
 		method: 'post',
-		url: 'https://seedy-fiuba-smart-contract.herokuapp.com/wallet',
+		url: 'http://localhost:3000/wallet', //ToDo: cambiar url a heroku
 		headers: {
 			'Content-Type': 'application/json'
 		}
