@@ -12,7 +12,10 @@ const createWallet = async() => {
 	};
 
 	return axios(config).then((response) => {
-		return response.data;
+		return {
+			message: 'ok',
+			data: response.data
+		};
 	})
 		.catch((error) => {
 			if (error.response.status === 401) {

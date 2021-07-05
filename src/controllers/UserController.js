@@ -18,7 +18,12 @@ exports.createUser = async (req, res, next) => {
 		}
 
 		const wallet = await Wallet.createWallet();
-		const userData = await UserService.createUser(req.body, wallet);
+
+		if(wallet.message != 'ok') {
+			throw new UserError(constants.error.UNEXPECTED_ERROR, wallet.message);
+		}
+
+		const userData = await UserService.createUser(req.body, wallet.data);
 		metrics.increment('traditional.register', 1, ['id:' + userData.id, 'role:' + userData.role]);
 		return responses.statusOk(res, userData);
 	} catch (e) {
