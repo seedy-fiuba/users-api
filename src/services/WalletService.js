@@ -4,10 +4,11 @@ const constants = require('../utils/constants');
 const createWallet = async() => {
 	let config = {
 		method: 'post',
-		url: 'http://localhost:3000/wallet', //ToDo: cambiar url a heroku
+		url: 'https://seedy-fiuba-smart-contract.herokuapp.com/wallet',
 		headers: {
 			'Content-Type': 'application/json'
-		}
+		},
+		data : JSON.stringify({})
 	};
 
 	return axios(config).then((response) => {

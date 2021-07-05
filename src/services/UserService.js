@@ -16,8 +16,8 @@ const createUser = async (data, wallet) => {
 		email: data.email,
 		password: password,
 		role: data.role,
-		walletAddress: wallet.walletAddress,
-		walletPrivateKey: wallet.walletPrivateKey
+		walletAddress: wallet.address,
+		walletPrivateKey: wallet.privateKey
 	});
 
 	try {
@@ -27,8 +27,7 @@ const createUser = async (data, wallet) => {
 			name: savedUser.name,
 			lastName: savedUser.lastName,
 			email: savedUser.email,
-			role: savedUser.role,
-			walletAddress: savedUser.walletAddress
+			role: savedUser.role
 		};
 	} catch (error) {
 		// console.log(error);
