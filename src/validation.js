@@ -33,7 +33,7 @@ const reviewValidator = (data) => {
 		'projectId': Joi.number().min(0).required()
 	});
 	return schema.validate(data);
-}
+};
 
 const searchReviewValidator = (data) => {
 	const schema = Joi.object({
@@ -41,7 +41,7 @@ const searchReviewValidator = (data) => {
 		'status': Joi.string().valid('pending','approved','rejected')
 	});
 	return schema.validate(data);
-}
+};
 
 const searchUsersValidator = (data) => {
 	const schema = Joi.object({
@@ -50,7 +50,7 @@ const searchUsersValidator = (data) => {
 		'role': Joi.string().valid('sponsor', 'entrepreneur', 'reviewer', 'admin')
 	});
 	return schema.validate(data);
-}
+};
 
 module.exports = {
 	registerValidation,

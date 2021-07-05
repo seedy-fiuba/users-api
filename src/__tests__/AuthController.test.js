@@ -15,8 +15,8 @@ let jwtSignVerify;
 
 beforeAll(() => {
 	jwtSignVerify = jest.spyOn(jwt, 'sign');
-	jwtSignVerify.mockImplementation(() => { return { token: 'token' }});
-})
+	jwtSignVerify.mockImplementation(() => { return { token: 'token' };});
+});
 
 beforeEach(() => {
 	mockedUser = {
@@ -59,7 +59,7 @@ describe('POST /auth/login', () => {
 	test('Login fails with invalida body', async () => {
 		const res = await request.post('/auth/login').send({});
 		expect(res.status).toBe(400);
-	})
+	});
 
 	test('Unauthorized if password incorrect', async () => {
 		userLogin.password = 'another password';
@@ -84,22 +84,22 @@ describe('POST /auth/google_login', () => {
 	beforeEach(() => {
 		idTokenBody = {
 			idToken: 'token'
-		}
+		};
 		createUserSpy = jest.spyOn(UserService, 'createUser');
 		getUserByMailSpy = jest.spyOn(UserService, 'getUserByMail');
-		verifyIdTokenMock = jest.fn()
+		verifyIdTokenMock = jest.fn();
 		OAuth2Client.mockImplementation(() => {
 			return {
 				verifyIdToken: verifyIdTokenMock
-			}
-		})
+			};
+		});
 		verifyIdTokenMock.mockReturnValue({ getPayload: () => {
-				return {
-					email: mockedUser.email,
-					given_name: mockedUser.name,
-					family_name: mockedUser.lastName,
-				}
-			}
+			return {
+				email: mockedUser.email,
+				given_name: mockedUser.name,
+				family_name: mockedUser.lastName,
+			};
+		}
 		});
 		mockingoose(userModel).toReturn(mockedUser, 'findOne');
 	});
@@ -108,7 +108,7 @@ describe('POST /auth/google_login', () => {
 		jest.clearAllMocks();
 	});
 
-	test("should verify token successfully...", async () => {
+	test('should verify token successfully...', async () => {
 		const res = await request.post('/auth/google_login').send(idTokenBody);
 
 		expect(verifyIdTokenMock).toHaveBeenCalledWith({ idToken: 'token', audience: process.env.GOOGLE_CLIENT_ID });
@@ -148,7 +148,7 @@ describe('POST /auth/authenticate', () => {
 	beforeAll(() => {
 		tokenBody = {
 			authToken: 'sdflnewlkntlekngskndflksnlerte'
-		}
+		};
 		verifySpy = jest.spyOn(jwt, 'verify');
 	});
 
@@ -164,7 +164,7 @@ describe('POST /auth/authenticate', () => {
 	});
 
 	test('user is authorized if token is valid', async () => {
-		verifySpy.mockImplementation((token, secret, callback) => callback(undefined, "kk"));
+		verifySpy.mockImplementation((token, secret, callback) => callback(undefined, 'kk'));
 
 		const res = await request.post('/auth/authenticate').send(tokenBody);
 		expect(res.status).toBe(200);
