@@ -54,7 +54,7 @@ describe('POST /reviews', () => {
 		expect(res.status).toBe(400);
 
 		let parsedResponse = JSON.parse(res.text);
-		expect(parsedResponse.message).toContain('\"reviewerId\" is required');
+		expect(parsedResponse.message).toContain('"reviewerId" is required');
 	});
 
 	test('Does not create request review without projectId', async() => {
@@ -63,7 +63,11 @@ describe('POST /reviews', () => {
 		expect(res.status).toBe(400);
 
 		let parsedResponse = JSON.parse(res.text);
+<<<<<<< HEAD
 		expect(parsedResponse.message).toContain('\"projectId\" is required');
+=======
+		expect(parsedResponse.message).toContain('"projectId" is required');
+>>>>>>> 166d72f84ba51f14c1e29cce5b0f0a6ef384f7cc
 	});
 
 	test('Does not create request review if reviewer not found', async() => {
@@ -133,6 +137,21 @@ describe('PUT /reviews/:id', () => {
 		let parsedResponse = JSON.parse(res.text);
 		expect(parsedResponse.message).toContain('Status field is required');
 	});
+<<<<<<< HEAD
+=======
+
+	test('Does not update if review does not exist', async () => {
+		updateReviewByIdSpy.mockImplementation(() => {
+			return undefined;
+		});
+
+		const res = await request.put('/reviews/1').send({status: 'approved'});
+		expect(res.status).toBe(404);
+
+		let parsedResponse = JSON.parse(res.text);
+		expect(parsedResponse.message).toContain('Review not found');
+	})
+>>>>>>> 166d72f84ba51f14c1e29cce5b0f0a6ef384f7cc
 });
 
 describe('GET /reviews', () => {
@@ -170,6 +189,10 @@ describe('GET /reviews', () => {
 		console.log(res.text);
 
 		let parsedResponse = JSON.parse(res.text);
+<<<<<<< HEAD
 		expect(parsedResponse.message).toContain('\"status\" must be one of [pending, approved, rejected]');
+=======
+		expect(parsedResponse.message).toContain('"status" must be one of [pending, approved, rejected]');
+>>>>>>> 166d72f84ba51f14c1e29cce5b0f0a6ef384f7cc
 	});
 });
