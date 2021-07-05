@@ -5,24 +5,24 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-		name: { type: String, required: true},
-		lastName: { type: String, required: true},
-		email: { type: String, required: true},
-		password: { type: String, required: true},
-		role: { type: String, required: true},
-		description : {type: String, required: false}
-	},
-	{
-		timestamps: true, // timestamps adds "createdAt" and "updatedAt" fields
-		toJSON: {
-			transform: function (doc, ret) {
-				ret.id = ret._id;
-				delete ret.__v;
-				delete ret._id;
-				delete ret.password;
-			}
+	name: { type: String, required: true},
+	lastName: { type: String, required: true},
+	email: { type: String, required: true},
+	password: { type: String, required: true},
+	role: { type: String, required: true},
+	description : {type: String, required: false}
+},
+{
+	timestamps: true, // timestamps adds "createdAt" and "updatedAt" fields
+	toJSON: {
+		transform: function (doc, ret) {
+			ret.id = ret._id;
+			delete ret.__v;
+			delete ret._id;
+			delete ret.password;
 		}
-	});
+	}
+});
 
 if (process.env.NODE_ENV !== 'test') {
 	autoIncrement.initialize(mongoose.connection);
