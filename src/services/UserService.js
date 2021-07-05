@@ -3,7 +3,7 @@ const constants = require('../utils/constants');
 const UserError = require('../exceptions/UserError');
 const hash = require('../utils/hashUtil');
 
-const createUser = async (data) => {
+const createUser = async (data, wallet) => {
 	const userData = await getUserByMail(data.email);
 	if (userData)
 		throw new UserError(constants.error.CONFLICT_ERROR, 'User already registered');
@@ -15,7 +15,9 @@ const createUser = async (data) => {
 		lastName: data.lastName,
 		email: data.email,
 		password: password,
-		role: data.role
+		role: data.role,
+		walletAddress: wallet.address,
+		walletPrivateKey: wallet.privateKey
 	});
 
 	try {
@@ -28,6 +30,7 @@ const createUser = async (data) => {
 			role: savedUser.role
 		};
 	} catch (error) {
+		// console.log(error);
 		throw new UserError(constants.error.UNEXPECTED_ERROR, 'Couldnt save user');
 	}
 };

@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@hapi/joi": "^17.1.1",
+    "axios": "^0.21.1",
     "eslint": "^7.26.0",
     "mockingoose": "^2.15.2"
   },

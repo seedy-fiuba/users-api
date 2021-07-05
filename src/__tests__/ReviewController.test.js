@@ -144,7 +144,8 @@ describe('PUT /reviews/:id', () => {
 
 		let parsedResponse = JSON.parse(res.text);
 		expect(parsedResponse.message).toContain('Review not found');
-	})
+	});
+
 });
 
 describe('GET /reviews', () => {

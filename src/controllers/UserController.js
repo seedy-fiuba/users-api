@@ -2,6 +2,7 @@ let UserService = require('../services/UserService');
 const UserError = require('../exceptions/UserError');
 const responses = require('../utils/responses');
 const constants = require('../utils/constants');
+const Wallet = require('../services/WalletService');
 var metrics = require('datadog-metrics');
 
 const { registerValidation, searchUsersValidator } = require('../validation');
@@ -16,7 +17,13 @@ exports.createUser = async (req, res, next) => {
 			throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
 		}
 
-		const userData = await UserService.createUser(req.body);
+		const wallet = await Wallet.createWallet();
+
+		if(wallet.message != 'ok') {
+			throw new UserError(constants.error.UNEXPECTED_ERROR, wallet.message);
+		}
+
+		const userData = await UserService.createUser(req.body, wallet.data);
 		metrics.increment('traditional.register', 1, ['id:' + userData.id, 'role:' + userData.role]);
 		return responses.statusOk(res, userData);
 	} catch (e) {
