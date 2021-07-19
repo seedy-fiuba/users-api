@@ -101,11 +101,10 @@ const retrieveUserByAdmin = (user, req) => {
 		return user;
 	}
 
-	user = user.toObject();
+	user = user.toJSON();
 	delete user.status;
 	return user;
 };
-
 /*
 exports.deleteUser = async (req, res, next) => {
     try {
