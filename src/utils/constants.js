@@ -12,7 +12,13 @@ const errorCodes = {
 	NOT_FOUND: 'NotFoundError'
 };
 
+const userStatus = {
+	blocked: 'blocked',
+	available: 'available'
+}
+
 module.exports = {
 	allowedRole: allowedRole,
-	error: errorCodes
+	error: errorCodes,
+	userStatus: userStatus
 };

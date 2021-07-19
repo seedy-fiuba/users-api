@@ -18,7 +18,8 @@ const createUser = async (data, wallet) => {
 		role: data.role,
 		walletAddress: wallet.address,
 		walletPrivateKey: wallet.privateKey,
-		firebaseToken: '0'
+		firebaseToken: '0',
+		status: constants.userStatus.available
 	});
 
 	try {
@@ -57,7 +58,10 @@ const getUserById = async (id) => {
 };
 
 const updateUserById = async(id, newValues) => {
-	return User.findByIdAndUpdate(id, newValues, {new: true});
+	return User.findByIdAndUpdate(
+		{_id: id },
+		newValues,
+		{new: true});
 };
 
 module.exports = {

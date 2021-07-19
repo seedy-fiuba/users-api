@@ -4,6 +4,7 @@ let request = supertest(server.app);
 const mockingoose = require('mockingoose');
 let userModel = require('../models/User');
 let UserService = require('../services/UserService');
+const constants = require('../utils/constants')
 
 let mockedPaginatedUsers;
 let mockedUserPayload;
@@ -173,11 +174,33 @@ describe('PUT /users/:id', () => {
 	test('Updates user successfully', async () => {
 		updateUserByIdSpy.mockImplementation(() => {
 			return mockedUserPayload;
-		});
+		})
 
-		const res = await request.put('/users/1').send(mockedUserPayload);
+		const res = await request.put('/users/1').send({description: 'ñsdvsñdvosdjv'});
 
-		expect(updateUserByIdSpy).toHaveBeenCalledWith('1', 'ñsdvsñdvosdjv');
+		expect(updateUserByIdSpy).toHaveBeenCalledWith('1', {description: 'ñsdvsñdvosdjv'});
+		expect(res.status).toBe(200);
+	});
+
+	test('Update user to block without X-Admin return error', async () => {
+		updateUserByIdSpy.mockImplementation(() => {
+			return mockedUserPayload;
+		})
+
+		const res = await request.put('/users/1').send({status: constants.userStatus.blocked});
+
+		expect(updateUserByIdSpy).toHaveBeenCalledTimes(0);
+		expect(res.status).toBe(401);
+	});
+
+	test('Update user to block', async () => {
+		updateUserByIdSpy.mockImplementation(() => {
+			return mockedUserPayload;
+		})
+
+		const res = await request.put('/users/1').set('X-Admin','true').send({status: constants.userStatus.blocked});
+
+		expect(updateUserByIdSpy).toHaveBeenCalledWith('1', {status: constants.userStatus.blocked});
 		expect(res.status).toBe(200);
 	});
 
