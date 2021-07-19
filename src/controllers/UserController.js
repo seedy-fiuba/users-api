@@ -3,6 +3,7 @@ const UserError = require('../exceptions/UserError');
 const responses = require('../utils/responses');
 const constants = require('../utils/constants');
 const Wallet = require('../services/WalletService');
+const validator = require('../validation');
 var metrics = require('datadog-metrics');
 
 const { registerValidation, searchUsersValidator } = require('../validation');
@@ -71,7 +72,17 @@ exports.getUser = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
 	try {
-		let result = await UserService.updateUserById(req.params.id, req.body.description);
+		let {value, error} = validator.updateUser(req.body);
+		if(error) {
+			error.name = constants.error.BAD_REQUEST;
+			throw error;
+		}
+
+		if(!(value['firebaseToken'] || value['description'] )) {
+			return responses.badRequest(res, 'At least one field is required to update');
+		}
+
+		let result = await UserService.updateUserById(req.params.id, value);
 		if (!result) {
 			return responses.notFoundResponse(res, 'User not found');
 		}

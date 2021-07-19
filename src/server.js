@@ -8,6 +8,7 @@ const indexRouter = require('./routes/index');
 const usersRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth');
 const reviewsRoutes = require ('./routes/reviews');
+const notificationsRoutes = require('./routes/notifications');
 const mongoose = require('mongoose');
 const apiResponse = require('./utils/responses');
 const constants = require('./utils/constants');
@@ -37,6 +38,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRoutes);
 app.use('/auth', authRoutes);
 app.use('/reviews', reviewsRoutes);
+app.use('/notifications', notificationsRoutes);
 
 // throw 404 if URL not found
 app.all('*', function(req, res, next) {

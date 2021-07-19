@@ -52,11 +52,30 @@ const searchUsersValidator = (data) => {
 	return schema.validate(data);
 };
 
+const notificationValidation = (data) => {
+	const schema = Joi.object({
+		'id' : Joi.Number().required,
+		'title': Joi.string(),
+		'message': Joi.string()
+	});
+	return schema.validate(data);
+};
+
+const updateUser = (data) => {
+	const schema = Joi.object({
+		description: Joi.string().min(10).max(1024),
+		firebaseToken: Joi.string()
+	});
+	return schema.validate(data);
+};
+
 module.exports = {
 	registerValidation,
 	loginValidation,
 	authenticateValidation,
 	reviewValidator,
 	searchReviewValidator,
-	searchUsersValidator
+	searchUsersValidator,
+	notificationValidation,
+	updateUser
 };
