@@ -97,6 +97,7 @@ const retrieveUserByAdmin = (user, req) => {
 		return user
 	}
 
+	user = user.toObject()
 	delete user.status
 	return user
 }
