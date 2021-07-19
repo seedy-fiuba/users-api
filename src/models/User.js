@@ -12,7 +12,8 @@ const UserSchema = new Schema({
 	role: { type: String, required: true},
 	description : {type: String, required: false},
 	walletAddress: { type: String, required: true},
-	walletPrivateKey: {type: String, required: true}
+	walletPrivateKey: {type: String, required: true},
+	status: {type: String, required: true}
 },
 {
 	timestamps: true, // timestamps adds "createdAt" and "updatedAt" fields

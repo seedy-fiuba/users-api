@@ -6,6 +6,7 @@ const constants = require('../utils/constants');
 const jwt = require('jsonwebtoken');
 const hash = require('../utils/hashUtil');
 var metrics = require('datadog-metrics');
+const Wallet = require('../services/WalletService');
 
 // validation
 const { loginValidation, authenticateValidation } = require('../validation');
@@ -24,6 +25,10 @@ exports.login = [
 			// throw error when email is wrong
 			if (!user)
 				throw new UserError(constants.error.BAD_REQUEST, 'No user registered with this email.');
+
+			if(user['status'] == constants.userStatus.blocked) {
+				throw new UserError(constants.error.UNAUTHORIZED_ERROR, 'user is blocked, unauthorized. Please contact an administrator to solve your issue');
+			}
 
 			// check for password correctness
 			const validPassword = await hash.validatePasswords(req.body.password, user.password);
@@ -62,8 +67,8 @@ exports.loginGoogle = [
 			const client = new OAuth2Client(CLIENT_ID);
 
 			googleVerify(req, res, CLIENT_ID, client).catch((error) => {
-				console.error(error);
-				throw new UserError(constants.error.UNAUTHORIZED_ERROR, error.message);
+				console.log(error);
+				next(new UserError(constants.error.UNAUTHORIZED_ERROR, error.message))
 			});
 
 		} catch (e) {
@@ -107,7 +112,15 @@ async function googleVerify(req, res, clientId, client) {
 	var registering = false;
 
 	var userData = await UserService.getUserByMail(payload['email']);
+
 	if (!userData) {
+
+		const wallet = await Wallet.createWallet();
+
+		if(wallet.message != 'ok') {
+			throw new UserError(constants.error.UNEXPECTED_ERROR, wallet.message);
+		}
+
 		const userPayload = {
 			name: payload['given_name'],
 			lastName: payload['family_name'],
@@ -116,8 +129,12 @@ async function googleVerify(req, res, clientId, client) {
 			role: '-' //TODO: Set role
 		};
 
-		userData = await UserService.createUser(userPayload);
+		userData = await UserService.createUser(userPayload, wallet.data);
 		registering = true;
+	}
+
+	if(userData['status'] == constants.userStatus.blocked) {
+		throw new UserError(constants.error.UNAUTHORIZED_ERROR, 'user is blocked, unauthorized. Please contact an administrator to solve your issue');
 	}
 
 	const token = jwt.sign(

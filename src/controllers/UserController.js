@@ -5,7 +5,7 @@ const constants = require('../utils/constants');
 const Wallet = require('../services/WalletService');
 var metrics = require('datadog-metrics');
 
-const { registerValidation, searchUsersValidator } = require('../validation');
+const { registerValidation, searchUsersValidator, updateUserValidator } = require('../validation');
 
 exports.createUser = async (req, res, next) => {
 	// validate the user
@@ -42,7 +42,7 @@ exports.getUsers = async (req, res, next) => {
 			.then((result) => {
 				let bodyResponse = {
 					totalItems: result.totalDocs,
-					users: result.docs,
+					users: result.docs.map(user => retrieveUserByAdmin(user, req)),
 					totalPages: result.totalPages,
 					currentPage: result.page - 1
 				};
@@ -62,7 +62,7 @@ exports.getUser = async (req, res, next) => {
 		let user = await UserService.getUserById(req.params.id);
 		if (!user)
 			throw new UserError(constants.error.NOT_FOUND, 'User not found');
-		return responses.statusOk(res, user);
+		return responses.statusOk(res, retrieveUserByAdmin(user, req));
 	} catch (e) {
 		next(e);
 	}
@@ -71,16 +71,35 @@ exports.getUser = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
 	try {
-		let result = await UserService.updateUserById(req.params.id, req.body.description);
+		let {value, error} = updateUserValidator(req.body);
+		if (error) {
+			throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
+		}
+
+		if (req.header('X-Admin') == null && value.status) {
+			throw new UserError(constants.error.UNAUTHORIZED_ERROR, "don't have permission to modify the field")
+		}
+
+		let result = await UserService.updateUserById(req.params.id, value);
 		if (!result) {
 			return responses.notFoundResponse(res, 'User not found');
 		}
-		return responses.statusOk(res, result);
+
+		return responses.statusOk(res, retrieveUserByAdmin(result, req));
 
 	} catch (e) {
 		next(e);
 	}
 };
+
+const retrieveUserByAdmin = (user, req) => {
+	if (req.header('X-Admin')) {
+		return user
+	}
+
+	delete user.status
+	return user
+}
 /*
 exports.deleteUser = async (req, res, next) => {
     try {
