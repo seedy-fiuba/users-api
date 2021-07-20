@@ -76,6 +76,14 @@ describe('POST /auth/login', () => {
 		expect(res.status).toBe(401);
 	});
 
+	test('Unauthorized if user is not admin and send X-Admin header', async () => {
+		mockedUser.role = 'sponsor';
+		mockingoose(userModel).toReturn(mockedUser, 'findOne');
+		const res = await request.post('/auth/login').set('X-Admin', 'true').send(userLogin);
+
+		expect(res.status).toBe(401);
+	});
+
 	test('Fails if user is not registered', async() => {
 		mockingoose(userModel).toReturn(undefined, 'findOne');
 		const res = await request.post('/auth/login').send(userLogin);

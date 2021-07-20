@@ -115,7 +115,38 @@ describe('GET /users', () => {
 
 	test('get users paginated successfully', async () => {
 		getUsersSpy.mockImplementation(() => {
-			return Promise.resolve(mockedPaginatedUsers);
+			let paginadoReLoco = {
+				docs: [
+					{
+						id: 1,
+						name: 'Fulanito1',
+						lastName: 'Ferrero',
+						email: 'fulanito1@fi.uba.ar',
+						role: 'entrepreneur',
+						createdAt: '2021-05-27T22:33:27.069+00:00',
+						updatedAt: '2021-05-27T22:33:27.069+00:00',
+						toJSON: function () {
+							return this
+						}
+					},
+					{
+						id: 2,
+						name: 'Fulanito2',
+						lastName: 'Ferrero',
+						email: 'fulanito2@fi.uba.ar',
+						role: 'sponsor',
+						createdAt: '2021-05-27T22:33:27.069+00:00',
+						updatedAt: '2021-05-27T22:33:27.069+00:00',
+						toJSON: function () {
+							return this
+						}
+					}
+				],
+				totalDocs: 2,
+				totalPages: 1,
+				page: 1
+			};
+			return Promise.resolve(paginadoReLoco);
 		});
 
 		const res = await request.get('/users');
@@ -146,7 +177,18 @@ describe('GET /users/:id', () => {
 
 	test('Gets user successfully', async () => {
 		getUserSpy.mockImplementation(() => {
-			return mockedUserPayload;
+			let userReLoco = {
+				name: 'jose',
+				lastName: 'sbruzzi',
+				email: 'josbruzzi@gmail.com',
+				password: 'PanTostado31',
+				role: 'sponsor',
+				toJSON: function () {
+					return this
+				}
+			};
+
+			return userReLoco;
 		});
 
 		const res = await request.get('/users/1');
@@ -173,6 +215,7 @@ describe('PUT /users/:id', () => {
 
 	test('Updates user successfully', async () => {
 		updateUserByIdSpy.mockImplementation(() => {
+			mockedUserPayload.toJSON = () => {return this}
 			return mockedUserPayload;
 		})
 

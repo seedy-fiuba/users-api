@@ -30,6 +30,10 @@ exports.login = [
 				throw new UserError(constants.error.UNAUTHORIZED_ERROR, 'user is blocked, unauthorized. Please contact an administrator to solve your issue');
 			}
 
+			if (req.header('X-Admin') && user['role'] != 'admin') {
+				throw new UserError(constants.error.UNAUTHORIZED_ERROR, `don't have enough permissions to login to the admin`);
+			}
+
 			// check for password correctness
 			const validPassword = await hash.validatePasswords(req.body.password, user.password);
 			if (!validPassword) {
