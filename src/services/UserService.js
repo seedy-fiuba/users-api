@@ -17,7 +17,8 @@ const createUser = async (data, wallet) => {
 		password: password,
 		role: data.role,
 		walletAddress: wallet.address,
-		walletPrivateKey: wallet.privateKey
+		walletPrivateKey: wallet.privateKey,
+		status: constants.userStatus.available
 	});
 
 	try {
@@ -55,10 +56,10 @@ const getUserById = async (id) => {
 	return User.findById(id).select('-password');
 };
 
-const updateUserById = async(id, description) => {
+const updateUserById = async(id, newValues) => {
 	return User.findByIdAndUpdate(
 		{_id: id },
-		{description: description},
+		newValues,
 		{new: true});
 };
 

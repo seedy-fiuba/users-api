@@ -9,6 +9,7 @@ const mockingoose = require('mockingoose');
 let userModel = require('../models/User');
 const hash = require('../utils/hashUtil');
 const UserService = require('../services/UserService');
+const constants = require('../utils/constants')
 
 let mockedUser;
 let jwtSignVerify;
@@ -64,6 +65,22 @@ describe('POST /auth/login', () => {
 	test('Unauthorized if password incorrect', async () => {
 		userLogin.password = 'another password';
 		const res = await request.post('/auth/login').send(userLogin);
+		expect(res.status).toBe(401);
+	});
+
+	test('Unauthorized if user is blocked', async () => {
+		mockedUser.status = constants.userStatus.blocked;
+		mockingoose(userModel).toReturn(mockedUser, 'findOne');
+		const res = await request.post('/auth/login').send(userLogin);
+		delete mockedUser.status
+		expect(res.status).toBe(401);
+	});
+
+	test('Unauthorized if user is not admin and send X-Admin header', async () => {
+		mockedUser.role = 'sponsor';
+		mockingoose(userModel).toReturn(mockedUser, 'findOne');
+		const res = await request.post('/auth/login').set('X-Admin', 'true').send(userLogin);
+
 		expect(res.status).toBe(401);
 	});
 
@@ -135,6 +152,17 @@ describe('POST /auth/google_login', () => {
 		const res = await request.post('/auth/google_login').send(idTokenBody);
 		expect(res.status).toBe(200);
 
+		expect(getUserByMailSpy).toHaveBeenCalledTimes(1);
+		expect(createUserSpy).toHaveBeenCalledTimes(0);
+	});
+
+	test('should deny login user if already registered and is blocked', async() => {
+		mockedUser.status = constants.userStatus.blocked
+		mockingoose(userModel).toReturn(mockedUser, 'findOne');
+		const res = await request.post('/auth/google_login').send(idTokenBody);
+		expect(res.status).toBe(401);
+
+		delete mockedUser.status
 		expect(getUserByMailSpy).toHaveBeenCalledTimes(1);
 		expect(createUserSpy).toHaveBeenCalledTimes(0);
 	});
