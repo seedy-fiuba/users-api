@@ -68,7 +68,7 @@ exports.loginGoogle = [
 
 			googleVerify(req, res, CLIENT_ID, client).catch((error) => {
 				console.log(error);
-				next(new UserError(constants.error.UNAUTHORIZED_ERROR, error.message))
+				next(new UserError(constants.error.UNAUTHORIZED_ERROR, error.message));
 			});
 
 		} catch (e) {

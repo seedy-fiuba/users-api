@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const constants = require('./utils/constants');
 
 const registerValidation = (data) => {
@@ -64,9 +64,10 @@ const searchUsersValidator = (data) => {
 
 const notificationValidation = (data) => {
 	const schema = Joi.object({
-		'id' : Joi.Number().required,
 		'title': Joi.string(),
-		'message': Joi.string()
+		'message': Joi.string(),
+		'ownerId' : Joi.number(),
+		'projectId' : Joi.number()
 	});
 	return schema.validate(data);
 };
