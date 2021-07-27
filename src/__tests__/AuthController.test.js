@@ -9,7 +9,7 @@ const mockingoose = require('mockingoose');
 let userModel = require('../models/User');
 const hash = require('../utils/hashUtil');
 const UserService = require('../services/UserService');
-const constants = require('../utils/constants')
+const constants = require('../utils/constants');
 
 let mockedUser;
 let jwtSignVerify;
@@ -57,7 +57,7 @@ describe('POST /auth/login', () => {
 		expect(parsedBody.token).toBeDefined();
 	});
 
-	test('Login fails with invalida body', async () => {
+	test('Login fails with invalid body', async () => {
 		const res = await request.post('/auth/login').send({});
 		expect(res.status).toBe(400);
 	});
@@ -72,7 +72,7 @@ describe('POST /auth/login', () => {
 		mockedUser.status = constants.userStatus.blocked;
 		mockingoose(userModel).toReturn(mockedUser, 'findOne');
 		const res = await request.post('/auth/login').send(userLogin);
-		delete mockedUser.status
+		delete mockedUser.status;
 		expect(res.status).toBe(401);
 	});
 
@@ -157,12 +157,12 @@ describe('POST /auth/google_login', () => {
 	});
 
 	test('should deny login user if already registered and is blocked', async() => {
-		mockedUser.status = constants.userStatus.blocked
+		mockedUser.status = constants.userStatus.blocked;
 		mockingoose(userModel).toReturn(mockedUser, 'findOne');
 		const res = await request.post('/auth/google_login').send(idTokenBody);
 		expect(res.status).toBe(401);
 
-		delete mockedUser.status
+		delete mockedUser.status;
 		expect(getUserByMailSpy).toHaveBeenCalledTimes(1);
 		expect(createUserSpy).toHaveBeenCalledTimes(0);
 	});
