@@ -13,7 +13,7 @@ exports.createUser = async (req, res, next) => {
 		const {error} = await registerValidation(req.body);
 
 		if (req.header('X-Admin')) {
-			req.body.role = 'admin'
+			req.body.role = 'admin';
 		}
 
 		// throw validation errors

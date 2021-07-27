@@ -4,7 +4,7 @@ let request = supertest(server.app);
 const mockingoose = require('mockingoose');
 let userModel = require('../models/User');
 let UserService = require('../services/UserService');
-const constants = require('../utils/constants')
+const constants = require('../utils/constants');
 
 let mockedPaginatedUsers;
 let mockedUserPayload;
@@ -88,6 +88,7 @@ describe('POST /users', () => {
 	});
 
 	test('Can register with expected roles', async () => {
+		jest.setTimeout(30000);
 		expect(mockedUserPayload.role).toBe('sponsor');
 		let res = await request.post('/users').send(mockedUserPayload);
 		expect(res.status).toBe(200);
@@ -126,7 +127,7 @@ describe('GET /users', () => {
 						createdAt: '2021-05-27T22:33:27.069+00:00',
 						updatedAt: '2021-05-27T22:33:27.069+00:00',
 						toJSON: function () {
-							return this
+							return this;
 						}
 					},
 					{
@@ -138,7 +139,7 @@ describe('GET /users', () => {
 						createdAt: '2021-05-27T22:33:27.069+00:00',
 						updatedAt: '2021-05-27T22:33:27.069+00:00',
 						toJSON: function () {
-							return this
+							return this;
 						}
 					}
 				],
@@ -184,7 +185,7 @@ describe('GET /users/:id', () => {
 				password: 'PanTostado31',
 				role: 'sponsor',
 				toJSON: function () {
-					return this
+					return this;
 				}
 			};
 
@@ -215,9 +216,9 @@ describe('PUT /users/:id', () => {
 
 	test('Updates user successfully', async () => {
 		updateUserByIdSpy.mockImplementation(() => {
-			mockedUserPayload.toJSON = () => {return this}
+			mockedUserPayload.toJSON = () => {return this;};
 			return mockedUserPayload;
-		})
+		});
 
 		const res = await request.put('/users/1').send({description: 'ñsdvsñdvosdjv'});
 
@@ -228,7 +229,7 @@ describe('PUT /users/:id', () => {
 	test('Update user to block without X-Admin return error', async () => {
 		updateUserByIdSpy.mockImplementation(() => {
 			return mockedUserPayload;
-		})
+		});
 
 		const res = await request.put('/users/1').send({status: constants.userStatus.blocked});
 
@@ -239,7 +240,7 @@ describe('PUT /users/:id', () => {
 	test('Update user to block', async () => {
 		updateUserByIdSpy.mockImplementation(() => {
 			return mockedUserPayload;
-		})
+		});
 
 		const res = await request.put('/users/1').set('X-Admin','true').send({status: constants.userStatus.blocked});
 
@@ -251,7 +252,7 @@ describe('PUT /users/:id', () => {
 		updateUserByIdSpy.mockImplementation(() => {
 			return undefined;
 		});
-		const res = await request.put('/users/2');
+		const res = await request.put('/users/96').set('X-Admin','true').send({status: constants.userStatus.available});
 		expect(res.status).toBe(404);
 	});
 });
