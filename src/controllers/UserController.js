@@ -109,13 +109,4 @@ const retrieveUserByAdmin = (user, req) => {
 	delete user.status;
 	return user;
 };
-/*
-exports.deleteUser = async (req, res, next) => {
-    try {
-        responses.notImplementedError(res);
-    } catch (e) {
-        next(e);
-    }
-};
-*/
 
