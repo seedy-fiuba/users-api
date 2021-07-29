@@ -49,7 +49,7 @@ exports.login = [
 				},
 				process.env.TOKEN_SECRET,
 				{
-					expiresIn: 60 * 60 * 1
+					expiresIn: 60 * 60 * 24
 				}
 			);
 
@@ -148,7 +148,7 @@ async function googleVerify(req, res, clientId, client) {
 		},
 		process.env.TOKEN_SECRET,
 		{
-			expiresIn: 30
+			expiresIn: 60 * 60 * 24
 		}
 	);
 
