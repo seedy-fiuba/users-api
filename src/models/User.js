@@ -13,6 +13,7 @@ const UserSchema = new Schema({
 	description : {type: String, required: false},
 	walletAddress: { type: String, required: true},
 	walletPrivateKey: {type: String, required: true},
+	firebaseToken: {type: String, required: false},
 	status: {type: String, required: true}
 },
 {

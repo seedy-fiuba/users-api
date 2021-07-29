@@ -1,5 +1,5 @@
-const Joi = require('@hapi/joi');
-const constants = require('./utils/constants')
+const Joi = require('joi');
+const constants = require('./utils/constants');
 
 const registerValidation = (data) => {
 	const schema = Joi.object({
@@ -15,6 +15,7 @@ const registerValidation = (data) => {
 const updateUserValidator = (data) => {
 	const schema = Joi.object({
 		description: Joi.string(),
+		firebaseToken: Joi.string(),
 		status: Joi.string().valid(constants.userStatus.available, constants.userStatus.blocked)
 	});
 	return schema.validate(data);
@@ -61,6 +62,16 @@ const searchUsersValidator = (data) => {
 	return schema.validate(data);
 };
 
+const notificationValidation = (data) => {
+	const schema = Joi.object({
+		'title': Joi.string(),
+		'message': Joi.string(),
+		'ownerId' : Joi.number(),
+		'projectId' : Joi.number()
+	});
+	return schema.validate(data);
+};
+
 module.exports = {
 	registerValidation,
 	loginValidation,
@@ -68,5 +79,6 @@ module.exports = {
 	reviewValidator,
 	searchReviewValidator,
 	searchUsersValidator,
+	notificationValidation,
 	updateUserValidator
 };

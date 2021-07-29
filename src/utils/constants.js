@@ -15,7 +15,7 @@ const errorCodes = {
 const userStatus = {
 	blocked: 'blocked',
 	available: 'available'
-}
+};
 
 module.exports = {
 	allowedRole: allowedRole,

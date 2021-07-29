@@ -18,6 +18,7 @@ const createUser = async (data, wallet) => {
 		role: data.role,
 		walletAddress: wallet.address,
 		walletPrivateKey: wallet.privateKey,
+		firebaseToken: '0',
 		status: constants.userStatus.available
 	});
 

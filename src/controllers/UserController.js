@@ -13,7 +13,7 @@ exports.createUser = async (req, res, next) => {
 		const {error} = await registerValidation(req.body);
 
 		if (req.header('X-Admin')) {
-			req.body.role = 'admin'
+			req.body.role = 'admin';
 		}
 
 		// throw validation errors
@@ -80,8 +80,12 @@ exports.updateUser = async (req, res, next) => {
 			throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
 		}
 
+		if (!(value['firebaseToken'] || value['description'] || value['status'])) {
+			return responses.badRequest(res, 'At least one field is required to update');
+		}
+
 		if (req.header('X-Admin') == null && value.status) {
-			throw new UserError(constants.error.UNAUTHORIZED_ERROR, "don't have permission to modify the field")
+			throw new UserError(constants.error.UNAUTHORIZED_ERROR, 'don\'t have permission to modify the field');
 		}
 
 		let result = await UserService.updateUserById(req.params.id, value);
@@ -98,13 +102,13 @@ exports.updateUser = async (req, res, next) => {
 
 const retrieveUserByAdmin = (user, req) => {
 	if (req.header('X-Admin')) {
-		return user
+		return user;
 	}
 
-	user = user.toJSON()
-	delete user.status
-	return user
-}
+	user = user.toJSON();
+	delete user.status;
+	return user;
+};
 /*
 exports.deleteUser = async (req, res, next) => {
     try {
