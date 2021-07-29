@@ -80,7 +80,7 @@ exports.updateUser = async (req, res, next) => {
 			throw new UserError(constants.error.BAD_REQUEST, error.details[0].message);
 		}
 
-		if(!(value['firebaseToken'] || value['description'] || value['status'])) {
+		if (!(value['firebaseToken'] || value['description'] || value['status'])) {
 			return responses.badRequest(res, 'At least one field is required to update');
 		}
 
